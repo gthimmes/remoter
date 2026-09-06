@@ -37,6 +37,19 @@ public partial class App : Application
         e.Handled = true;
     }
 
+    /// <summary>
+    /// Swaps the theme dictionary in place. It sits at index 0 of the merged dictionaries, so
+    /// every DynamicResource colour reference re-resolves and repaints without a restart.
+    /// </summary>
+    public static void ApplyTheme(string name)
+    {
+        var dict = new ResourceDictionary
+        {
+            Source = new Uri($"Themes/{name}.xaml", UriKind.Relative),
+        };
+        Current.Resources.MergedDictionaries[0] = dict;
+    }
+
     /// <summary>Appends the full exception to a log beside the app data. Returns its path.</summary>
     private static string? LogError(Exception exception)
     {

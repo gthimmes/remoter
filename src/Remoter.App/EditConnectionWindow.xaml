@@ -5,11 +5,11 @@
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <Window.Resources>
         <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
             <Setter Property="Margin" Value="0,6,0,2" />
         </Style>
         <Style x:Key="Section" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource Text}" />
+            <Setter Property="Foreground" Value="{DynamicResource Text}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,10,0,4" />
         </Style>
@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TabControl Grid.Row="0" Background="{StaticResource Panel}" BorderThickness="0">
+        <TabControl Grid.Row="0" Background="{DynamicResource Panel}" BorderThickness="0">
             <!-- General -->
             <TabItem Header="General">
                 <StackPanel Margin="16">
@@ -149,7 +149,7 @@
                     <CheckBox x:Name="RestrictedAdminBox" Content="Restricted Admin mode (do not send my credentials to the host)" />
                     <CheckBox x:Name="CredGuardBox" Content="Remote Credential Guard (keep my credentials on this computer)" />
                     <CheckBox x:Name="AdminSessionBox" Content="Connect to the console / administrative session" />
-                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMuted}" Margin="0,14,0,0"
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextMuted}" Margin="0,14,0,0"
                                Text="Network Level Authentication verifies your identity before a full session starts and is the safe default for connecting over your home network. Turn it off only for older systems that do not support it." />
                 </StackPanel>
             </TabItem>
@@ -168,7 +168,7 @@
                         <TextBox x:Name="GatewayHostBox" />
                         <CheckBox x:Name="GatewaySameCredsBox" Content="Use my connection credentials for the gateway" Margin="0,10,0,0" />
                     </StackPanel>
-                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMuted}" Margin="0,14,0,0"
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextMuted}" Margin="0,14,0,0"
                                Text="A gateway lets you reach a computer on a private network from outside without a VPN. Leave this off for connections within your own home network." />
                 </StackPanel>
             </TabItem>

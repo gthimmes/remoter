@@ -12,11 +12,11 @@
         </Grid.RowDefinitions>
 
         <!-- Quick connect with recents -->
-        <Border Grid.Row="0" Background="{StaticResource Panel}" Padding="18,16"
-                BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="{DynamicResource Panel}" Padding="18,16"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
             <StackPanel>
                 <TextBlock Text="QUICK CONNECT" FontSize="11" FontWeight="SemiBold"
-                           Foreground="{StaticResource TextFaint}" Margin="2,0,0,8" />
+                           Foreground="{DynamicResource TextFaint}" Margin="2,0,0,8" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -24,8 +24,8 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Text box + recents caret share one rounded frame -->
-                    <Border Grid.Column="0" Background="{StaticResource Input}" CornerRadius="6" BorderThickness="1"
-                            BorderBrush="{StaticResource Border}">
+                    <Border Grid.Column="0" Background="{DynamicResource Input}" CornerRadius="6" BorderThickness="1"
+                            BorderBrush="{DynamicResource Border}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -42,7 +42,7 @@
                             </TextBox>
                             <Button x:Name="RecentsButton" Grid.Column="1" Style="{StaticResource GhostButton}"
                                     Click="RecentsButton_Click" ToolTip="Recent connections" Padding="10,0" Width="38">
-                                <Path Data="M0,0 L4,4 L8,0 Z" Fill="{StaticResource TextMuted}"
+                                <Path Data="M0,0 L4,4 L8,0 Z" Fill="{DynamicResource TextMuted}"
                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                         </Grid>
@@ -53,28 +53,28 @@
 
                     <Popup x:Name="RecentsPopup" PlacementTarget="{Binding ElementName=QuickHost}" Placement="Bottom"
                            StaysOpen="False" AllowsTransparency="True" PopupAnimation="Slide" HorizontalOffset="-1" VerticalOffset="6">
-                        <Border Background="{StaticResource PanelAlt}" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1"
+                        <Border Background="{DynamicResource PanelAlt}" BorderBrush="{DynamicResource BorderStrong}" BorderThickness="1"
                                 CornerRadius="8" MinWidth="360" MaxHeight="360">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="18" ShadowDepth="0" Opacity="0.5" Color="Black" />
                             </Border.Effect>
                             <DockPanel>
-                                <Border DockPanel.Dock="Top" Padding="14,10" BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
+                                <Border DockPanel.Dock="Top" Padding="14,10" BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
                                     <Grid>
-                                        <TextBlock Text="Recent connections" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" />
+                                        <TextBlock Text="Recent connections" FontWeight="SemiBold" Foreground="{DynamicResource TextMuted}" />
                                         <Button Content="Clear" Style="{StaticResource GhostButton}" HorizontalAlignment="Right"
                                                 Padding="8,2" FontSize="12" Click="ClearRecents_Click" />
                                     </Grid>
                                 </Border>
                                 <TextBlock x:Name="RecentsEmpty" DockPanel.Dock="Bottom" Text="No recent connections yet."
-                                           Foreground="{StaticResource TextFaint}" Margin="14,12" Visibility="Collapsed" />
+                                           Foreground="{DynamicResource TextFaint}" Margin="14,12" Visibility="Collapsed" />
                                 <ListBox x:Name="RecentsList" Background="Transparent" BorderThickness="0" MaxHeight="300"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          MouseDoubleClick="RecentsList_MouseDoubleClick" Padding="6">
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem">
                                             <Setter Property="Padding" Value="10,8" />
-                                            <Setter Property="Foreground" Value="{StaticResource Text}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource Text}" />
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="ListBoxItem">
@@ -83,10 +83,10 @@
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="b" Property="Background" Value="{StaticResource PanelAlt}" />
+                                                                <Setter TargetName="b" Property="Background" Value="{DynamicResource PanelAlt}" />
                                                             </Trigger>
                                                             <Trigger Property="IsSelected" Value="True">
-                                                                <Setter TargetName="b" Property="Background" Value="{StaticResource Selection}" />
+                                                                <Setter TargetName="b" Property="Background" Value="{DynamicResource Selection}" />
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -97,8 +97,8 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel>
-                                                <TextBlock Text="{Binding Address}" FontWeight="SemiBold" Foreground="{StaticResource Text}" />
-                                                <TextBlock Foreground="{StaticResource TextFaint}" FontSize="11" Margin="0,1,0,0">
+                                                <TextBlock Text="{Binding Address}" FontWeight="SemiBold" Foreground="{DynamicResource Text}" />
+                                                <TextBlock Foreground="{DynamicResource TextFaint}" FontSize="11" Margin="0,1,0,0">
                                                     <Run Text="{Binding Username, Mode=OneWay}" />
                                                 </TextBlock>
                                             </StackPanel>
@@ -113,13 +113,13 @@
         </Border>
 
         <!-- Toolbar -->
-        <Border Grid.Row="1" Background="{StaticResource Bg}" Padding="18,10"
-                BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="1" Background="{DynamicResource Bg}" Padding="18,10"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="SAVED CONNECTIONS" FontSize="11" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextFaint}" VerticalAlignment="Center" Margin="0,0,16,0" />
-                    <Border Background="{StaticResource Input}" CornerRadius="6" BorderBrush="{StaticResource Border}" BorderThickness="1" Width="240">
+                               Foreground="{DynamicResource TextFaint}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                    <Border Background="{DynamicResource Input}" CornerRadius="6" BorderBrush="{DynamicResource Border}" BorderThickness="1" Width="240">
                         <Grid>
                             <TextBox x:Name="SearchBox" BorderThickness="0" Background="Transparent"
                                      VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged">
@@ -129,7 +129,7 @@
                                     </ControlTemplate>
                                 </TextBox.Template>
                             </TextBox>
-                            <TextBlock x:Name="SearchHint" Text="Search connections..." Foreground="{StaticResource TextFaint}"
+                            <TextBlock x:Name="SearchHint" Text="Search connections..." Foreground="{DynamicResource TextFaint}"
                                        Margin="11,0,0,0" IsHitTestVisible="False" VerticalAlignment="Center" />
                         </Grid>
                     </Border>
@@ -139,7 +139,7 @@
                     <Button Content="Edit" Click="Edit_Click" Margin="0,0,6,0" />
                     <Button Content="Duplicate" Click="Duplicate_Click" Margin="0,0,6,0" />
                     <Button Content="Delete" Click="Delete_Click" Margin="0,0,6,0" />
-                    <Border Width="1" Background="{StaticResource Border}" Margin="8,2" />
+                    <Border Width="1" Background="{DynamicResource Border}" Margin="8,2" />
                     <Button Content="Import .rdp" Click="Import_Click" Margin="0,0,6,0" />
                     <Button Content="Export .rdp" Click="Export_Click" />
                 </StackPanel>
@@ -147,19 +147,19 @@
         </Border>
 
         <!-- Saved connections -->
-        <ListView x:Name="List" Grid.Row="2" Background="{StaticResource Bg}" BorderThickness="0"
-                  Foreground="{StaticResource Text}" Margin="10,8"
+        <ListView x:Name="List" Grid.Row="2" Background="{DynamicResource Bg}" BorderThickness="0"
+                  Foreground="{DynamicResource Text}" Margin="10,8"
                   MouseDoubleClick="List_MouseDoubleClick">
             <ListView.Resources>
                 <Style TargetType="GridViewColumnHeader">
-                    <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
                     <Setter Property="FontWeight" Value="SemiBold" />
                     <Setter Property="FontSize" Value="12" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="GridViewColumnHeader">
-                                <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Border}"
+                                <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Border}"
                                         BorderThickness="0,0,1,1" Padding="12,8">
                                     <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
                                 </Border>
@@ -168,15 +168,15 @@
                     </Setter>
                 </Style>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Foreground" Value="{StaticResource Text}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Text}" />
                     <Setter Property="Padding" Value="8,9" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource Selection}" />
+                            <Setter Property="Background" Value="{DynamicResource Selection}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource Hover}" />
+                            <Setter Property="Background" Value="{DynamicResource Hover}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -189,10 +189,10 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="GroupItem">
                                         <StackPanel>
-                                            <Border Background="Transparent" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0"
+                                            <Border Background="Transparent" BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0"
                                                     Padding="12,7" Margin="0,4,0,0">
                                                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12"
-                                                           Foreground="{StaticResource TextMuted}" />
+                                                           Foreground="{DynamicResource TextMuted}" />
                                             </Border>
                                             <ItemsPresenter />
                                         </StackPanel>
@@ -209,7 +209,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="★" FontSize="14" HorizontalAlignment="Center"
-                                           Foreground="{StaticResource Favorite}" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
+                                           Foreground="{DynamicResource Favorite}" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -222,9 +222,9 @@
             </ListView.View>
         </ListView>
 
-        <Border Grid.Row="3" Background="{StaticResource Panel}" Padding="18,9"
-                BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0">
-            <TextBlock x:Name="Status" Foreground="{StaticResource TextMuted}" Text="Ready." />
+        <Border Grid.Row="3" Background="{DynamicResource Panel}" Padding="18,9"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0">
+            <TextBlock x:Name="Status" Foreground="{DynamicResource TextMuted}" Text="Ready." />
         </Border>
     </Grid>
 </Window>

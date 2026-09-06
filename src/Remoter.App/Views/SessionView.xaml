@@ -13,14 +13,14 @@
           Disconnect errors show here rather than in a message box: a modal dialog would freeze
           every other live session in the window until it was dismissed.
         -->
-        <Border x:Name="Banner" Grid.Row="0" Background="{StaticResource DangerSubtle}" BorderBrush="{StaticResource Danger}"
+        <Border x:Name="Banner" Grid.Row="0" Background="{DynamicResource DangerSubtle}" BorderBrush="{DynamicResource Danger}"
                 BorderThickness="0,0,0,1" Padding="16,10" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="BannerText" Grid.Column="0" Foreground="{StaticResource Text}"
+                <TextBlock x:Name="BannerText" Grid.Column="0" Foreground="{DynamicResource Text}"
                            TextWrapping="Wrap" Margin="0,0,16,0" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Content="Reconnect" Style="{StaticResource AccentButton}" Click="Reconnect_Click" Margin="0,0,8,0" />
@@ -36,7 +36,7 @@
         -->
         <Grid Grid.Row="1" Background="Black">
             <TextBlock x:Name="Placeholder" HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Foreground="{StaticResource TextFaint}" FontSize="14" />
+                       Foreground="{DynamicResource TextFaint}" FontSize="14" />
             <wf:WindowsFormsHost x:Name="Host" />
         </Grid>
     </Grid>

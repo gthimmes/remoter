@@ -41,7 +41,7 @@
             <Setter Property="Width" Value="18" />
             <Setter Property="Height" Value="18" />
             <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="{StaticResource TextFaint}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFaint}" />
             <Setter Property="ToolTip" Value="Close this session (Ctrl+W)" />
         </Style>
     </Window.Resources>
@@ -54,8 +54,8 @@
         </Grid.RowDefinitions>
 
         <!-- Tab strip + actions for the active session (all hidden in full screen) -->
-        <Border x:Name="Chrome" Grid.Row="0" Background="{StaticResource Panel}"
-                BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
+        <Border x:Name="Chrome" Grid.Row="0" Background="{DynamicResource Panel}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -74,19 +74,19 @@
                                              ToolTip="{Binding StatusText}">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="{StaticResource TextFaint}" />
+                                                <Setter Property="Fill" Value="{DynamicResource TextFaint}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding StatusKey}" Value="Connecting">
-                                                        <Setter Property="Fill" Value="{StaticResource Warning}" />
+                                                        <Setter Property="Fill" Value="{DynamicResource Warning}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding StatusKey}" Value="Connected">
-                                                        <Setter Property="Fill" Value="{StaticResource Success}" />
+                                                        <Setter Property="Fill" Value="{DynamicResource Success}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding StatusKey}" Value="Reconnecting">
-                                                        <Setter Property="Fill" Value="{StaticResource Accent}" />
+                                                        <Setter Property="Fill" Value="{DynamicResource Accent}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding StatusKey}" Value="Failed">
-                                                        <Setter Property="Fill" Value="{StaticResource Danger}" />
+                                                        <Setter Property="Fill" Value="{DynamicResource Danger}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -118,16 +118,16 @@
         <!-- Every live session lives here at once; only the selected one is visible. -->
         <Grid x:Name="SessionHost" Grid.Row="1" Background="Black" />
 
-        <Border x:Name="StatusBar" Grid.Row="2" Background="{StaticResource Panel}" Padding="12,5"
-                BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0">
+        <Border x:Name="StatusBar" Grid.Row="2" Background="{DynamicResource Panel}" Padding="12,5"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="StateText" Grid.Column="0" Foreground="{StaticResource TextMuted}"
+                <TextBlock x:Name="StateText" Grid.Column="0" Foreground="{DynamicResource TextMuted}"
                            FontSize="12" FontWeight="SemiBold" Margin="0,0,14,0" />
-                <TextBlock x:Name="LogText" Grid.Column="1" Foreground="{StaticResource TextFaint}" FontSize="12"
+                <TextBlock x:Name="LogText" Grid.Column="1" Foreground="{DynamicResource TextFaint}" FontSize="12"
                            TextTrimming="CharacterEllipsis" />
             </Grid>
         </Border>
