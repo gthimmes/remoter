@@ -13,13 +13,18 @@ public partial class MainWindow : Window
 {
     private readonly ConnectionManager _connections = App.Current.Connections;
     private readonly ObservableCollection<ConnectionProfile> _items = new();
+    private readonly ObservableCollection<RecentConnection> _recentItems = new();
 
     public MainWindow()
     {
         InitializeComponent();
         List.ItemsSource = _items;
+        RecentsList.ItemsSource = _recentItems;
+
         _connections.Changed += (_, _) => Refresh();
+        _connections.RecentsChanged += (_, _) => RefreshRecents();
         Refresh();
+        RefreshRecents();
 
         if (_connections.LoadWarning is { } warning)
             Status.Text = warning;
@@ -40,8 +45,48 @@ public partial class MainWindow : Window
             : $"{_items.Count} saved connection{(_items.Count == 1 ? "" : "s")}.";
     }
 
-    private void List_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void RefreshRecents()
     {
+        _recentItems.Clear();
+        foreach (var r in _connections.Recents)
+            _recentItems.Add(r);
+        RecentsEmpty.Visibility = _recentItems.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        RecentsList.Visibility = _recentItems.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    // ----- Recents dropdown -----
+
+    private void RecentsButton_Click(object sender, RoutedEventArgs e)
+    {
+        RecentsPopup.IsOpen = !RecentsPopup.IsOpen;
+    }
+
+    private void RecentsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (RecentsList.SelectedItem is RecentConnection r)
+        {
+            RecentsPopup.IsOpen = false;
+            ConnectToRecent(r);
+        }
+    }
+
+    private void ClearRecents_Click(object sender, RoutedEventArgs e)
+    {
+        _connections.ClearRecents();
+        RecentsPopup.IsOpen = false;
+    }
+
+    private void ConnectToRecent(RecentConnection r)
+    {
+        var profile = new ConnectionProfile
+        {
+            Host = r.Host,
+            Port = r.Port,
+            Username = r.Username,
+            Domain = r.Domain,
+            Name = r.Host,
+        };
+        StartSession(profile, tracked: null);
     }
 
     // ----- Quick connect -----
@@ -63,8 +108,16 @@ public partial class MainWindow : Window
         if (port is not null)
             profile.Port = port.Value;
 
-        // Quick connections are not saved unless the user chooses to later.
-        StartSession(profile, saveOnConnect: false);
+        // Prefill from a recent entry for the same host, so we can reuse the last username.
+        var recent = _connections.Recents.FirstOrDefault(r =>
+            string.Equals(r.Host, host, StringComparison.OrdinalIgnoreCase) && r.Port == profile.Port);
+        if (recent is not null)
+        {
+            profile.Username = recent.Username;
+            profile.Domain = recent.Domain;
+        }
+
+        StartSession(profile, tracked: null);
     }
 
     // ----- Toolbar -----
@@ -96,7 +149,7 @@ public partial class MainWindow : Window
         var copy = Selected.Clone();
         copy.Id = Guid.NewGuid();
         copy.Name = Selected.DisplayName + " (copy)";
-        copy.SavePassword = false; // don't silently copy a stored secret
+        copy.SavePassword = false;
         copy.LastConnected = null;
         _connections.Add(copy, null);
         List.SelectedItem = _items.FirstOrDefault(p => p.Id == copy.Id);
@@ -168,32 +221,44 @@ public partial class MainWindow : Window
     private void List_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (Selected is not null)
-            StartSession(Selected.Clone(), saveOnConnect: true);
+            StartSession(Selected.Clone(), tracked: Selected);
     }
 
-    private void StartSession(ConnectionProfile profile, bool saveOnConnect)
+    /// <summary>
+    /// Opens a session. <paramref name="tracked"/> is the saved profile this came from (null for
+    /// quick/recent connections), used to stamp its last-connected time on success.
+    /// </summary>
+    private void StartSession(ConnectionProfile profile, ConnectionProfile? tracked)
     {
-        var password = saveOnConnect && profile.Id != Guid.Empty ? _connections.GetPassword(profile) : null;
+        var password = tracked is not null && tracked.SavePassword ? _connections.GetPassword(tracked) : null;
 
-        // If no username or (saved) password, ask before we open the session window.
-        if (string.IsNullOrEmpty(profile.Username) || (profile.SavePassword && password is null) || !profile.SavePassword)
+        var needPrompt = string.IsNullOrEmpty(profile.Username)
+            || (profile.SavePassword && password is null)
+            || tracked is null
+            || !profile.SavePassword;
+
+        if (needPrompt)
         {
             if (!CredentialPromptWindow.TryGetCredentials(this, profile, ref password))
                 return;
-        }
 
-        if (saveOnConnect)
-        {
-            var known = _connections.Profiles.FirstOrDefault(p => p.Id == profile.Id);
-            if (known is not null)
+            // If the user chose to save on a tracked profile, persist the choice and secret.
+            if (tracked is not null && profile.SavePassword && !string.IsNullOrEmpty(password))
             {
-                _connections.MarkConnected(known);
-                if (profile.SavePassword && !string.IsNullOrEmpty(password))
-                    _connections.Update(profile, password);
+                tracked.Username = profile.Username;
+                tracked.Domain = profile.Domain;
+                tracked.SavePassword = true;
+                _connections.Update(tracked, password);
             }
         }
 
         var window = new SessionWindow(profile, password);
+        window.SessionConnected += (_, _) =>
+        {
+            _connections.RecordRecent(profile.Host, profile.Port, profile.Username, profile.Domain);
+            if (tracked is not null)
+                _connections.MarkConnected(tracked);
+        };
         window.Show();
     }
 

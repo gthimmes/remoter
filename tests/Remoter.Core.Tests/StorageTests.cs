@@ -23,8 +23,8 @@ public class StorageTests : IDisposable
         var store = new ProfileStore(StorePath);
         var profile = new ConnectionProfile { Name = "Home PC", Host = "home", Username = "glenn" };
 
-        store.Save(new[] { profile });
-        var loaded = store.Load();
+        store.Save(new StoreData { Profiles = { profile } });
+        var loaded = store.Load().Profiles;
 
         var one = Assert.Single(loaded);
         Assert.Equal(profile.Id, one.Id);
@@ -35,7 +35,7 @@ public class StorageTests : IDisposable
     [Fact]
     public void ProfileStore_MissingFile_ReturnsEmpty()
     {
-        Assert.Empty(new ProfileStore(StorePath).Load());
+        Assert.Empty(new ProfileStore(StorePath).Load().Profiles);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class StorageTests : IDisposable
         Directory.CreateDirectory(_dir);
         File.WriteAllText(StorePath, "{ not valid json ");
 
-        var loaded = new ProfileStore(StorePath).Load(out var warning);
+        var loaded = new ProfileStore(StorePath).Load(out var warning).Profiles;
 
         Assert.Empty(loaded);
         Assert.NotNull(warning);
@@ -78,6 +78,27 @@ public class StorageTests : IDisposable
         manager.Update(edit, null);
 
         Assert.Null(creds.Read(profile.CredentialTarget));
+    }
+
+    [Fact]
+    public void ConnectionManager_RecordRecent_DedupesAndOrdersMostRecentFirst()
+    {
+        var manager = new ConnectionManager(new ProfileStore(StorePath), new InMemoryCredentialStore());
+
+        manager.RecordRecent("alpha", 3389, "u1", null);
+        manager.RecordRecent("beta", 3390, "u2", "DOM");
+        manager.RecordRecent("alpha", 3389, "u1b", null); // same host+port -> move to front, update
+
+        Assert.Equal(2, manager.Recents.Count);
+        Assert.Equal("alpha", manager.Recents[0].Host);
+        Assert.Equal("u1b", manager.Recents[0].Username);
+        Assert.Equal("beta", manager.Recents[1].Host);
+
+        // Persisted and reloaded.
+        var reloaded = new ConnectionManager(new ProfileStore(StorePath), new InMemoryCredentialStore());
+        reloaded.Load();
+        Assert.Equal(2, reloaded.Recents.Count);
+        Assert.Equal("alpha", reloaded.Recents[0].Host);
     }
 
     [Fact]

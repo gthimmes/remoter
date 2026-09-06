@@ -20,6 +20,13 @@ public partial class CredentialPromptWindow : Window
             else
                 PasswordBox.Focus();
         };
+
+        // Borderless window: let the user drag it by its body.
+        MouseLeftButtonDown += (_, e) =>
+        {
+            if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
+                DragMove();
+        };
     }
 
     /// <summary>

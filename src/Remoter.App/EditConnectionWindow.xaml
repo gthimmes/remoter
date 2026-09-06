@@ -13,9 +13,6 @@
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,10,0,4" />
         </Style>
-        <Style TargetType="TabItem">
-            <Setter Property="Padding" Value="12,6" />
-        </Style>
     </Window.Resources>
     <Grid Margin="14">
         <Grid.RowDefinitions>

@@ -3,8 +3,15 @@ using Remoter.Core.Models;
 
 namespace Remoter.Core.Storage;
 
+/// <summary>The persisted contents of the store: saved profiles plus the recent-hosts list.</summary>
+public sealed class StoreData
+{
+    public List<ConnectionProfile> Profiles { get; set; } = new();
+    public List<RecentConnection> Recents { get; set; } = new();
+}
+
 /// <summary>
-/// Persists connection profiles as a single JSON document. Writes are atomic (temp file + rename)
+/// Persists the store as a single JSON document. Writes are atomic (temp file + rename)
 /// so a crash mid-save never loses the previous list.
 /// </summary>
 public sealed class ProfileStore
@@ -22,35 +29,39 @@ public sealed class ProfileStore
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Remoter", "connections.json");
 
     /// <summary>
-    /// Loads all profiles. A missing file yields an empty list. A corrupt file is moved aside
-    /// (so the user's data is not destroyed by the next save) and an empty list is returned.
+    /// Loads the store. A missing file yields empty lists. A corrupt file is moved aside
+    /// (so the user's data is not destroyed by the next save) and empty lists are returned.
     /// </summary>
-    public IReadOnlyList<ConnectionProfile> Load(out string? warning)
+    public StoreData Load(out string? warning)
     {
         warning = null;
         if (!File.Exists(FilePath))
-            return Array.Empty<ConnectionProfile>();
+            return new StoreData();
 
         try
         {
             var json = File.ReadAllText(FilePath);
             var doc = JsonSerializer.Deserialize<StoreDocument>(json, JsonDefaults.Options);
-            return doc?.Profiles ?? new List<ConnectionProfile>();
+            return new StoreData
+            {
+                Profiles = doc?.Profiles ?? new(),
+                Recents = doc?.Recents ?? new(),
+            };
         }
         catch (JsonException ex)
         {
             var backup = FilePath + ".corrupt-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
             File.Move(FilePath, backup, overwrite: true);
             warning = $"The connection list could not be read ({ex.Message}). It was moved to {backup}.";
-            return Array.Empty<ConnectionProfile>();
+            return new StoreData();
         }
     }
 
-    public IReadOnlyList<ConnectionProfile> Load() => Load(out _);
+    public StoreData Load() => Load(out _);
 
-    public void Save(IEnumerable<ConnectionProfile> profiles)
+    public void Save(StoreData data)
     {
-        var doc = new StoreDocument { Version = CurrentVersion, Profiles = profiles.ToList() };
+        var doc = new StoreDocument { Version = CurrentVersion, Profiles = data.Profiles, Recents = data.Recents };
         var json = JsonSerializer.Serialize(doc, JsonDefaults.Options);
 
         var dir = Path.GetDirectoryName(FilePath);
@@ -66,5 +77,6 @@ public sealed class ProfileStore
     {
         public int Version { get; set; } = CurrentVersion;
         public List<ConnectionProfile> Profiles { get; set; } = new();
+        public List<RecentConnection> Recents { get; set; } = new();
     }
 }

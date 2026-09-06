@@ -15,8 +15,12 @@ public partial class SessionWindow : Window
     private bool _connectStarted;
     private bool _userClosing;
     private bool _fullScreen;
+    private bool _everConnected;
     private WindowState _preFullScreenState = WindowState.Normal;
     private DisconnectInfo? _lastDisconnect;
+
+    /// <summary>Raised once, the first time the session successfully connects.</summary>
+    public event EventHandler? SessionConnected;
 
     public SessionWindow(ConnectionProfile profile, string? password)
     {
@@ -39,7 +43,16 @@ public partial class SessionWindow : Window
 
         Loaded += OnLoaded;
         SizeChanged += (_, _) => { if (_profile.Display.SizeMode == SizeMode.FitToWindow) _resizeDebounce.Stop(); _resizeDebounce.Start(); };
+        StateChanged += OnWindowStateChanged;
         Closing += OnClosing;
+    }
+
+    // Maximizing the window goes full screen (borderless, covers the taskbar), matching the
+    // built-in client. Leaving full screen comes back through the toolbar or the connection bar.
+    private void OnWindowStateChanged(object? sender, EventArgs e)
+    {
+        if (WindowState == WindowState.Maximized && !_fullScreen)
+            ApplyFullScreen(true);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -101,7 +114,14 @@ public partial class SessionWindow : Window
             _ => "",
         };
         if (e.NewState == SessionState.Connected)
+        {
             PushSizeIfFitToWindow();
+            if (!_everConnected)
+            {
+                _everConnected = true;
+                SessionConnected?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 
     private void OnDisconnected(DisconnectInfo info)
@@ -157,7 +177,9 @@ public partial class SessionWindow : Window
 
         if (value)
         {
-            _preFullScreenState = WindowState;
+            // Return to a normal window when leaving full screen; restoring to Maximized would
+            // immediately re-trigger full screen via OnWindowStateChanged.
+            _preFullScreenState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState;
             Toolbar.Visibility = Visibility.Collapsed;
             LogText.Visibility = Visibility.Collapsed;
             WindowStyle = WindowStyle.None;

@@ -4,14 +4,17 @@ using Remoter.Core.Security;
 namespace Remoter.Core.Storage;
 
 /// <summary>
-/// The single source of truth for the saved connection list and their passwords.
-/// Keeps the in-memory list, the JSON file and Credential Manager in step.
+/// The single source of truth for the saved connection list, the recent-hosts list and
+/// their passwords. Keeps the in-memory state, the JSON file and Credential Manager in step.
 /// </summary>
 public sealed class ConnectionManager
 {
+    private const int MaxRecents = 15;
+
     private readonly ProfileStore _store;
     private readonly ICredentialStore _credentials;
     private readonly List<ConnectionProfile> _profiles = new();
+    private readonly List<RecentConnection> _recents = new();
 
     public ConnectionManager(ProfileStore store, ICredentialStore credentials)
     {
@@ -21,16 +24,24 @@ public sealed class ConnectionManager
 
     public IReadOnlyList<ConnectionProfile> Profiles => _profiles;
 
+    public IReadOnlyList<RecentConnection> Recents => _recents;
+
     public event EventHandler? Changed;
+
+    public event EventHandler? RecentsChanged;
 
     public string? LoadWarning { get; private set; }
 
     public void Load()
     {
+        var data = _store.Load(out var warning);
         _profiles.Clear();
-        _profiles.AddRange(_store.Load(out var warning));
+        _profiles.AddRange(data.Profiles);
+        _recents.Clear();
+        _recents.AddRange(data.Recents);
         LoadWarning = warning;
         Changed?.Invoke(this, EventArgs.Empty);
+        RecentsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>Adds a new profile and optionally saves its password.</summary>
@@ -71,6 +82,40 @@ public sealed class ConnectionManager
         Persist();
     }
 
+    /// <summary>
+    /// Records a successful connection to a host in the recent list (most recent first, deduped
+    /// by host and port, capped). Called after a session actually connects.
+    /// </summary>
+    public void RecordRecent(string host, int port, string? username, string? domain)
+    {
+        if (string.IsNullOrWhiteSpace(host))
+            return;
+
+        var entry = new RecentConnection
+        {
+            Host = host.Trim(),
+            Port = port,
+            Username = string.IsNullOrWhiteSpace(username) ? null : username,
+            Domain = string.IsNullOrWhiteSpace(domain) ? null : domain,
+            LastConnected = DateTimeOffset.Now,
+        };
+
+        _recents.RemoveAll(r => string.Equals(r.Key, entry.Key, StringComparison.OrdinalIgnoreCase));
+        _recents.Insert(0, entry);
+        if (_recents.Count > MaxRecents)
+            _recents.RemoveRange(MaxRecents, _recents.Count - MaxRecents);
+
+        _store.Save(new StoreData { Profiles = _profiles, Recents = _recents });
+        RecentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ClearRecents()
+    {
+        _recents.Clear();
+        _store.Save(new StoreData { Profiles = _profiles, Recents = _recents });
+        RecentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     public string? GetPassword(ConnectionProfile profile) =>
         profile.SavePassword ? _credentials.Read(profile.CredentialTarget)?.Secret : null;
 
@@ -90,7 +135,7 @@ public sealed class ConnectionManager
 
     private void Persist()
     {
-        _store.Save(_profiles);
+        _store.Save(new StoreData { Profiles = _profiles, Recents = _recents });
         Changed?.Invoke(this, EventArgs.Empty);
     }
 }
