@@ -120,10 +120,14 @@ public sealed class RdpSessionControl : UserControl, IRemoteSession
         c.DesktopHeight = size.Height;
         c.ColorDepth = p.Display.ColorDepth;
 
-        if (!string.IsNullOrEmpty(p.Username))
-            c.UserName = p.Username;
-        if (!string.IsNullOrEmpty(p.Domain))
-            c.Domain = p.Domain;
+        // Pass the identity as a single "domain\user" string in UserName and leave Domain empty.
+        // Setting Domain separately breaks Microsoft-account logon (domain "MicrosoftAccount"): the
+        // host rejects it with "The logon attempt failed" even though the password is correct, while
+        // the combined form works. Plain local and AD "DOMAIN\user" logins accept this form too.
+        var loginName = BuildLoginName(p.Domain, p.Username);
+        if (!string.IsNullOrEmpty(loginName))
+            c.UserName = loginName;
+        c.Domain = "";
         if (!string.IsNullOrEmpty(password))
             ns.ClearTextPassword = password;
 
@@ -202,6 +206,22 @@ public sealed class RdpSessionControl : UserControl, IRemoteSession
         // We handle warnings ourselves via events; suppress the control's own dialogs where possible.
         ns.AllowCredentialSaving = false;
         adv.EnableWindowsKey = 1;
+    }
+
+    /// <summary>
+    /// Builds the single username string to hand the control: "domain\user" when a NetBIOS-style
+    /// domain is present, otherwise the username as-is (already a UPN, an already-qualified
+    /// "domain\user", or a Microsoft-account "MicrosoftAccount\email").
+    /// </summary>
+    private static string BuildLoginName(string? domain, string? username)
+    {
+        var user = username?.Trim() ?? "";
+        var dom = domain?.Trim() ?? "";
+        if (user.Length == 0)
+            return "";
+        if (user.Contains('\\') || dom.Length == 0)
+            return user;
+        return $"{dom}\\{user}";
     }
 
     private static void ApplyDriveRedirection(ConnectionProfile p, IMsRdpClientNonScriptable8 ns)
