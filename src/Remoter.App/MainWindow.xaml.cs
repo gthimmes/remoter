@@ -268,14 +268,15 @@ public partial class MainWindow : Window
             }
         }
 
-        var window = new SessionWindow(profile, password);
-        window.SessionConnected += (_, _) =>
+        // Sessions dock as tabs in the host window you used last; hold Shift to get a new window.
+        var newWindow = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+        var view = SessionHostWindow.OpenSession(profile, password, newWindow);
+        view.FirstConnected += (_, _) =>
         {
             _connections.RecordRecent(profile.Host, profile.Port, profile.Username, profile.Domain);
             if (tracked is not null)
                 _connections.MarkConnected(tracked);
         };
-        window.Show();
     }
 
     private static string SafeFileName(string name)

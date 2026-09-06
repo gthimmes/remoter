@@ -30,8 +30,8 @@ ITPRC manager round-ups (captured September 2026).
 
 ## What Remoter has today
 
-Parity with the built-in Windows client: saved connections, quick connect, recent
-hosts, `.rdp` import/export, Credential Manager passwords, the full RDP option set
+Parity with the built-in Windows client, plus a tabbed multi-session window: saved
+connections, quick connect, recent hosts, `.rdp` import/export, Credential Manager passwords, the full RDP option set
 (display, local resources, experience, security, gateway), full-screen, Ctrl+Alt+Del,
 fit-to-window, and clear connection errors. Single user, local, RDP only.
 
@@ -53,11 +53,18 @@ The jump from "a list" to "a manager."
 
 ### Tier 2 — Session experience
 
-- **Tabbed sessions**: many live sessions docked as tabs in one window (the signature
-  RDM/mRemoteNG feature).
+- **Tabbed sessions** - done. Many live sessions share one host window: each keeps its own view
+  parented for the life of its tab and only visibility changes, so switching never tears a
+  connection down. Tabs carry a status dot, close on middle-click or their X, and are reachable
+  with Ctrl+Tab and Ctrl+1..9 while the chrome has focus. A failed session shows a retry banner
+  in its own tab instead of a modal, which would otherwise block every other session. Holding
+  Shift while connecting opens a separate host window.
 - **Connection status**: reachability/ping indicator per connection.
 - **Wake-on-LAN** before connecting.
 - **Thumbnails / live previews** of open sessions.
+- **Tear-off tabs**: drag a tab out into its own window (not started; moving a live hosted
+  control between windows needs care).
+
 
 ### Tier 3 — More protocols
 

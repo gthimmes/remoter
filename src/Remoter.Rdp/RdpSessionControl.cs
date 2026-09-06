@@ -50,6 +50,13 @@ public sealed class RdpSessionControl : UserControl, IRemoteSession
         if (!_ax.Created)
             _ax.CreateControl();
 
+        // AxHost only instantiates the OCX while the control is genuinely visible, so a caller that
+        // hides the session view before connecting gets no COM interfaces at all. Say so plainly
+        // rather than throwing a bare NullReferenceException out of ApplyProfile.
+        if (_ax.Client is null)
+            throw new InvalidOperationException(
+                "The Remote Desktop control could not be created. The session view has to be visible before it connects.");
+
         ApplyProfile(profile, password, size);
         SetState(SessionState.Connecting);
         LogMessage($"Connecting to {profile.Host}:{profile.Port} as {profile.QualifiedUsername}...");
