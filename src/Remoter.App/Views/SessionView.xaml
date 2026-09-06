@@ -13,9 +13,15 @@
           Disconnect errors show here rather than in a message box: a modal dialog would freeze
           every other live session in the window until it was dismissed.
         -->
-        <Border x:Name="Banner" Grid.Row="0" Background="{DynamicResource DangerSubtle}" BorderBrush="{DynamicResource Danger}"
-                BorderThickness="0,0,0,1" Padding="16,10" Visibility="Collapsed">
-            <Grid>
+        <!--
+          Panel underneath, tint on top. DangerSubtle is a translucent token, and this row sits on
+          the black RDP ground, so tinting straight onto it composited to near-black and swallowed
+          the light theme's dark ink.
+        -->
+        <Border x:Name="Banner" Grid.Row="0" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Danger}"
+                BorderThickness="0,0,0,1" Visibility="Collapsed">
+            <Grid Background="{DynamicResource DangerSubtle}" Margin="0">
+              <Grid Margin="16,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -26,6 +32,7 @@
                     <Button Content="Reconnect" Style="{StaticResource AccentButton}" Click="Reconnect_Click" Margin="0,0,8,0" />
                     <Button Content="Close tab" Click="CloseTab_Click" />
                 </StackPanel>
+              </Grid>
             </Grid>
         </Border>
 

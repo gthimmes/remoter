@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
+using Remoter.App.Theming;
 using Remoter.Core.Models;
 using Remoter.Core.Rdp;
 using Remoter.Core.Storage;
@@ -14,6 +15,7 @@ namespace Remoter.App;
 public partial class MainWindow : Window
 {
     private readonly ConnectionManager _connections = App.Current.Connections;
+    private readonly ThemeManager _theme = App.Current.Theme;
     private readonly ObservableCollection<ConnectionProfile> _items = new();
     private readonly ObservableCollection<RecentConnection> _recentItems = new();
 
@@ -38,9 +40,32 @@ public partial class MainWindow : Window
 
         if (_connections.LoadWarning is { } warning)
             Status.Text = warning;
+
+        _theme.Changed += (_, _) => RefreshThemeMenu();
+        RefreshThemeMenu();
     }
 
     private ConnectionProfile? Selected => List.SelectedItem as ConnectionProfile;
+
+    // ----- Appearance -----
+
+    private void ThemeButton_Click(object sender, RoutedEventArgs e) => ThemePopup.IsOpen = !ThemePopup.IsOpen;
+
+    private void ThemeChoice_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string tag } && Enum.TryParse<AppTheme>(tag, out var mode))
+            _theme.SetMode(mode);
+        ThemePopup.IsOpen = false;
+    }
+
+    private void RefreshThemeMenu()
+    {
+        // Hidden rather than collapsed, so the labels stay lined up.
+        TickSystem.Visibility = _theme.Mode == AppTheme.System ? Visibility.Visible : Visibility.Hidden;
+        TickDark.Visibility = _theme.Mode == AppTheme.Dark ? Visibility.Visible : Visibility.Hidden;
+        TickLight.Visibility = _theme.Mode == AppTheme.Light ? Visibility.Visible : Visibility.Hidden;
+        SystemHint.Text = _theme.Mode == AppTheme.System ? $"({_theme.Resolved.ToLowerInvariant()})" : "";
+    }
 
     private void Refresh()
     {

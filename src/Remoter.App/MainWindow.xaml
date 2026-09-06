@@ -142,6 +142,51 @@
                     <Border Width="1" Background="{DynamicResource Border}" Margin="8,2" />
                     <Button Content="Import .rdp" Click="Import_Click" Margin="0,0,6,0" />
                     <Button Content="Export .rdp" Click="Export_Click" />
+                    <Border Width="1" Background="{DynamicResource Border}" Margin="8,2" />
+                    <Button x:Name="ThemeButton" Content="Theme" Click="ThemeButton_Click"
+                            ToolTip="Appearance: follow Windows, or pick dark or light" />
+
+                    <Popup x:Name="ThemePopup" PlacementTarget="{Binding ElementName=ThemeButton}" Placement="Bottom"
+                           StaysOpen="False" AllowsTransparency="True" PopupAnimation="Slide"
+                           HorizontalOffset="-60" VerticalOffset="6">
+                        <Border Background="{DynamicResource PanelAlt}" BorderBrush="{DynamicResource BorderStrong}"
+                                BorderThickness="1" CornerRadius="8" MinWidth="200">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="18" ShadowDepth="0" Opacity="0.5" Color="Black" />
+                            </Border.Effect>
+                            <StackPanel Margin="6">
+                                <Button Style="{StaticResource GhostButton}" Click="ThemeChoice_Click" Tag="System"
+                                        AutomationProperties.Name="System"
+                                        HorizontalContentAlignment="Left" Padding="8,7">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="TickSystem" Text="&#x2713;" Width="20"
+                                                   Foreground="{DynamicResource Accent}" />
+                                        <TextBlock Text="System" />
+                                        <TextBlock x:Name="SystemHint" Margin="6,0,0,0"
+                                                   Foreground="{DynamicResource TextFaint}" FontSize="12" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource GhostButton}" Click="ThemeChoice_Click" Tag="Dark"
+                                        AutomationProperties.Name="Dark"
+                                        HorizontalContentAlignment="Left" Padding="8,7">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="TickDark" Text="&#x2713;" Width="20"
+                                                   Foreground="{DynamicResource Accent}" />
+                                        <TextBlock Text="Dark" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource GhostButton}" Click="ThemeChoice_Click" Tag="Light"
+                                        AutomationProperties.Name="Light"
+                                        HorizontalContentAlignment="Left" Padding="8,7">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="TickLight" Text="&#x2713;" Width="20"
+                                                   Foreground="{DynamicResource Accent}" />
+                                        <TextBlock Text="Light" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
                 </StackPanel>
             </Grid>
         </Border>

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using Remoter.App.Theming;
 using Remoter.Core.Security;
 using Remoter.Core.Storage;
 
@@ -9,6 +10,8 @@ namespace Remoter.App;
 public partial class App : Application
 {
     public ConnectionManager Connections { get; private set; } = null!;
+
+    public ThemeManager Theme { get; private set; } = null!;
 
     public static new App Current => (App)Application.Current;
 
@@ -21,10 +24,21 @@ public partial class App : Application
         Connections = new ConnectionManager(store, credentials);
         Connections.Load();
 
+        // Paint the chosen theme before the first window exists, so it never flashes the default.
+        var settingsStore = new SettingsStore(SettingsStore.DefaultPath);
+        Theme = new ThemeManager(settingsStore, settingsStore.Load());
+        Theme.Initialize();
+
         DispatcherUnhandledException += OnUnhandledException;
 
         var main = new MainWindow();
         main.Show();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        Theme?.Dispose();
+        base.OnExit(e);
     }
 
     private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
