@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    mc:Ignorable="po">
+
+  <!--
+    Remoter dark theme. Brushes only, no styles, no templates.
+    Every value here is contrast-checked; see docs/design/REMOTER-DESIGN.md.
+    Consume these with DynamicResource, never StaticResource, or the runtime
+    theme swap will not repaint.
+  -->
+
+  <!-- Surfaces -->
+  <SolidColorBrush x:Key="Bg"                Color="#FF14161A" po:Freeze="True" />
+  <SolidColorBrush x:Key="Panel"             Color="#FF1A1D22" po:Freeze="True" />
+  <SolidColorBrush x:Key="PanelAlt"          Color="#FF22262D" po:Freeze="True" />
+  <SolidColorBrush x:Key="Input"             Color="#FF1E2229" po:Freeze="True" />
+
+  <!-- Lines -->
+  <SolidColorBrush x:Key="Border"            Color="#FF2B3038" po:Freeze="True" />
+  <SolidColorBrush x:Key="BorderStrong"      Color="#FF3A414C" po:Freeze="True" />
+
+  <!-- Ink -->
+  <SolidColorBrush x:Key="Text"              Color="#FFE4E7EC" po:Freeze="True" />
+  <SolidColorBrush x:Key="TextMuted"         Color="#FF9BA3B0" po:Freeze="True" />
+  <SolidColorBrush x:Key="TextFaint"         Color="#FF7E8898" po:Freeze="True" />
+  <SolidColorBrush x:Key="TextOnAccent"      Color="#FFFFFFFF" po:Freeze="True" />
+
+  <!--
+    Accent splits in two. #4C8DFF reads as accent TEXT on a dark ground at
+    5.3:1, but only 3.2:1 behind a white label. Filled buttons use AccentFill.
+  -->
+  <SolidColorBrush x:Key="Accent"            Color="#FF4C8DFF" po:Freeze="True" />
+  <SolidColorBrush x:Key="AccentFill"        Color="#FF1A62D8" po:Freeze="True" />
+  <SolidColorBrush x:Key="AccentHover"       Color="#FF1F6FEB" po:Freeze="True" />
+  <SolidColorBrush x:Key="AccentPressed"     Color="#FF154FAF" po:Freeze="True" />
+  <SolidColorBrush x:Key="AccentSubtle"      Color="#244C8DFF" po:Freeze="True" />
+
+  <!-- States. Alpha on purpose, so they composite over whatever is behind. -->
+  <SolidColorBrush x:Key="Selection"         Color="#2E4C8DFF" po:Freeze="True" />
+  <SolidColorBrush x:Key="SelectionInactive" Color="#1A8C96A8" po:Freeze="True" />
+  <SolidColorBrush x:Key="Hover"             Color="#0BFFFFFF" po:Freeze="True" />
+
+  <!-- Semantic -->
+  <SolidColorBrush x:Key="Danger"            Color="#FFF0645C" po:Freeze="True" />
+  <SolidColorBrush x:Key="DangerSubtle"      Color="#1FF0645C" po:Freeze="True" />
+  <SolidColorBrush x:Key="Success"           Color="#FF3FB37F" po:Freeze="True" />
+  <SolidColorBrush x:Key="Favorite"          Color="#FFF5C451" po:Freeze="True" />
+
+</ResourceDictionary>
