@@ -116,8 +116,24 @@
         <Border Grid.Row="1" Background="{StaticResource Bg}" Padding="18,10"
                 BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
             <Grid>
-                <TextBlock Text="SAVED CONNECTIONS" FontSize="11" FontWeight="SemiBold"
-                           Foreground="{StaticResource TextFaint}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="SAVED CONNECTIONS" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextFaint}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                    <Border Background="#2A2D33" CornerRadius="6" BorderBrush="{StaticResource Border}" BorderThickness="1" Width="240">
+                        <Grid>
+                            <TextBox x:Name="SearchBox" BorderThickness="0" Background="Transparent"
+                                     VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged">
+                                <TextBox.Template>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <ScrollViewer x:Name="PART_ContentHost" Margin="10,6" VerticalAlignment="Center" />
+                                    </ControlTemplate>
+                                </TextBox.Template>
+                            </TextBox>
+                            <TextBlock x:Name="SearchHint" Text="Search connections..." Foreground="{StaticResource TextFaint}"
+                                       Margin="11,0,0,0" IsHitTestVisible="False" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="New" Style="{StaticResource AccentButton}" Click="New_Click" Margin="0,0,8,0" />
                     <Button Content="Edit" Click="Edit_Click" Margin="0,0,6,0" />
@@ -165,12 +181,42 @@
                     </Style.Triggers>
                 </Style>
             </ListView.Resources>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="GroupItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="GroupItem">
+                                        <StackPanel>
+                                            <Border Background="#1B1C20" Padding="12,7" Margin="0,4,0,0">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12"
+                                                           Foreground="{StaticResource TextMuted}" />
+                                            </Border>
+                                            <ItemsPresenter />
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </ListView.GroupStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="230" DisplayMemberBinding="{Binding DisplayName}" />
-                    <GridViewColumn Header="Computer" Width="230" DisplayMemberBinding="{Binding Host}" />
-                    <GridViewColumn Header="User" Width="190" DisplayMemberBinding="{Binding QualifiedUsername}" />
-                    <GridViewColumn Header="Last connected" Width="170" DisplayMemberBinding="{Binding LastConnected}" />
+                    <GridViewColumn Width="34">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="★" FontSize="14" HorizontalAlignment="Center"
+                                           Foreground="#F5C451" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding DisplayName}" />
+                    <GridViewColumn Header="Computer" Width="210" DisplayMemberBinding="{Binding Host}" />
+                    <GridViewColumn Header="User" Width="170" DisplayMemberBinding="{Binding QualifiedUsername}" />
+                    <GridViewColumn Header="Tags" Width="150" DisplayMemberBinding="{Binding TagList}" />
+                    <GridViewColumn Header="Last connected" Width="150" DisplayMemberBinding="{Binding LastConnected}" />
                 </GridView>
             </ListView.View>
         </ListView>

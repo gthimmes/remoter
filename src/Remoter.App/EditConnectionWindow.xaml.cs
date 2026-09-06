@@ -38,6 +38,11 @@ public partial class EditConnectionWindow : Window
         PasswordBox.Password = existingPassword ?? "";
         SavePasswordBox.IsChecked = p.SavePassword;
 
+        FolderBox.Text = p.Folder;
+        FavoriteBox.IsChecked = p.Favorite;
+        TagsBox.Text = p.TagList;
+        NotesBox.Text = p.Notes;
+
         SizeModeBox.SelectedIndex = (int)p.Display.SizeMode;
         WidthBox.Text = p.Display.Width.ToString(CultureInfo.InvariantCulture);
         HeightBox.Text = p.Display.Height.ToString(CultureInfo.InvariantCulture);
@@ -94,6 +99,14 @@ public partial class EditConnectionWindow : Window
         if (slash > 0) { p.Domain = user[..slash]; p.Username = user[(slash + 1)..]; }
         else { p.Domain = null; p.Username = string.IsNullOrEmpty(user) ? null : user; }
         p.SavePassword = SavePasswordBox.IsChecked == true;
+
+        p.Folder = ConnectionQuery.NormalizeFolder(FolderBox.Text);
+        p.Favorite = FavoriteBox.IsChecked == true;
+        p.Tags = TagsBox.Text
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+        p.Notes = NotesBox.Text.Trim();
 
         p.Display.SizeMode = (SizeMode)Math.Max(0, SizeModeBox.SelectedIndex);
         p.Display.Width = ParseInt(WidthBox.Text, p.Display.Width);

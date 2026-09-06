@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+
             <!-- Palette. One place, tuned for readable contrast on a dark ground. -->
             <SolidColorBrush x:Key="Bg" Color="#17181B" />
             <SolidColorBrush x:Key="Panel" Color="#202227" />

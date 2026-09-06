@@ -26,6 +26,18 @@ public sealed class ConnectionProfile
     /// <summary>True when a password for this profile is stored in Credential Manager under <see cref="CredentialTarget"/>.</summary>
     public bool SavePassword { get; set; }
 
+    /// <summary>Folder path this connection lives in, e.g. "Home/Servers". Empty means the top level.</summary>
+    public string Folder { get; set; } = "";
+
+    /// <summary>Pinned for one-click access.</summary>
+    public bool Favorite { get; set; }
+
+    /// <summary>Free-form labels for filtering.</summary>
+    public List<string> Tags { get; set; } = new();
+
+    /// <summary>Free-form notes.</summary>
+    public string Notes { get; set; } = "";
+
     public DisplaySettings Display { get; set; } = new();
 
     public LocalResourceSettings LocalResources { get; set; } = new();
@@ -42,6 +54,19 @@ public sealed class ConnectionProfile
 
     [JsonIgnore]
     public string DisplayName => string.IsNullOrWhiteSpace(Name) ? Host : Name;
+
+    /// <summary>Heading this connection is shown under: favorites first, then its folder, else "Ungrouped".</summary>
+    [JsonIgnore]
+    public string GroupKey =>
+        Favorite ? "★ Favorites" : string.IsNullOrEmpty(Folder) ? "Ungrouped" : Folder;
+
+    /// <summary>Sort key that orders groups: favorites, then named folders A-Z, then Ungrouped last.</summary>
+    [JsonIgnore]
+    public string GroupSort =>
+        Favorite ? "0" : string.IsNullOrEmpty(Folder) ? "2" : "1" + Folder.ToLowerInvariant();
+
+    [JsonIgnore]
+    public string TagList => string.Join(", ", Tags);
 
     /// <summary>Target name used in Windows Credential Manager. Stable across renames.</summary>
     [JsonIgnore]
@@ -69,6 +94,10 @@ public sealed class ConnectionProfile
         Username = clone.Username;
         Domain = clone.Domain;
         SavePassword = clone.SavePassword;
+        Folder = clone.Folder;
+        Favorite = clone.Favorite;
+        Tags = clone.Tags;
+        Notes = clone.Notes;
         Display = clone.Display;
         LocalResources = clone.LocalResources;
         Experience = clone.Experience;

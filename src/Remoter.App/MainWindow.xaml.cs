@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Remoter.Core.Models;
@@ -15,10 +17,18 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<ConnectionProfile> _items = new();
     private readonly ObservableCollection<RecentConnection> _recentItems = new();
 
+    private readonly ICollectionView _view;
+
     public MainWindow()
     {
         InitializeComponent();
-        List.ItemsSource = _items;
+
+        _view = CollectionViewSource.GetDefaultView(_items);
+        _view.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ConnectionProfile.GroupKey)));
+        _view.SortDescriptions.Add(new SortDescription(nameof(ConnectionProfile.GroupSort), ListSortDirection.Ascending));
+        _view.SortDescriptions.Add(new SortDescription(nameof(ConnectionProfile.DisplayName), ListSortDirection.Ascending));
+        _view.Filter = o => o is ConnectionProfile p && ConnectionQuery.Matches(p, SearchBox.Text);
+        List.ItemsSource = _view;
         RecentsList.ItemsSource = _recentItems;
 
         _connections.Changed += (_, _) => Refresh();
@@ -36,13 +46,19 @@ public partial class MainWindow : Window
     {
         var previous = Selected?.Id;
         _items.Clear();
-        foreach (var p in _connections.Profiles.OrderBy(p => p.DisplayName, StringComparer.CurrentCultureIgnoreCase))
+        foreach (var p in _connections.Profiles)
             _items.Add(p);
         if (previous is { } id)
             List.SelectedItem = _items.FirstOrDefault(p => p.Id == id);
         Status.Text = _items.Count == 0
             ? "No saved connections yet. Use New, or type a computer name above."
             : $"{_items.Count} saved connection{(_items.Count == 1 ? "" : "s")}.";
+    }
+
+    private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        SearchHint.Visibility = string.IsNullOrEmpty(SearchBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+        _view.Refresh();
     }
 
     private void RefreshRecents()
