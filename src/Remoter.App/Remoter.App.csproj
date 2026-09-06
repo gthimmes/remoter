@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Remoter.App</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>Remoter</AssemblyName>
+    <Description>Remoter - a Windows Remote Desktop client.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- This app is WPF; keep the WinForms namespace out of the global usings so types like
+         Application, ComboBox and KeyEventArgs are unambiguous. The hosted RDP control is
+         referenced by its full type where needed. -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Remoter.Core\Remoter.Core.csproj" />
+    <ProjectReference Include="..\Remoter.Rdp\Remoter.Rdp.csproj" />
+  </ItemGroup>
+</Project>

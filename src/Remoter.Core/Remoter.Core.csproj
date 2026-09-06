@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Remoter.Core</RootNamespace>
+    <Description>Connection profiles, credential storage and session abstractions for Remoter.</Description>
+  </PropertyGroup>
+</Project>

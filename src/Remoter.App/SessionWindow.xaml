@@ -1,0 +1,36 @@
+<Window x:Class="Remoter.App.SessionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wf="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        Title="Remoter session" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="Black">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar (hidden in full screen; the control's own connection bar takes over there) -->
+        <Border x:Name="Toolbar" Grid.Row="0" Background="{StaticResource Panel}" Padding="10,6">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Disconnect" Click="Disconnect_Click" Margin="0,0,6,0" />
+                <Button Content="Full screen" Click="FullScreen_Click" Margin="0,0,6,0" />
+                <Button Content="Ctrl+Alt+Del" Click="Cad_Click" Margin="0,0,6,0" />
+                <Button Content="Fit now" Click="Fit_Click" Margin="0,0,6,0"
+                        ToolTip="Match the remote resolution to this window" />
+                <TextBlock x:Name="StateText" Margin="14,0,0,0" Foreground="{StaticResource TextMuted}" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="Black">
+            <wf:WindowsFormsHost x:Name="Host" />
+        </Border>
+
+        <Border Grid.Row="2" Background="{StaticResource Panel}" Padding="10,4">
+            <TextBlock x:Name="LogText" Foreground="{StaticResource TextMuted}" FontSize="12"
+                       TextTrimming="CharacterEllipsis" />
+        </Border>
+    </Grid>
+</Window>

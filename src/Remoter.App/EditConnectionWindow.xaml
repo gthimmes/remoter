@@ -1,0 +1,171 @@
+<Window x:Class="Remoter.App.EditConnectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Connection settings" Height="560" Width="620"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+            <Setter Property="Margin" Value="0,6,0,2" />
+        </Style>
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,10,0,4" />
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Padding" Value="12,6" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0" Background="{StaticResource Panel}" BorderThickness="0">
+            <!-- General -->
+            <TabItem Header="General">
+                <StackPanel Margin="16">
+                    <Label Content="Connection name" />
+                    <TextBox x:Name="NameBox" />
+                    <Label Content="Computer (name or address)" />
+                    <TextBox x:Name="HostBox" />
+                    <Label Content="Port" />
+                    <TextBox x:Name="PortBox" Width="100" HorizontalAlignment="Left" />
+                    <TextBlock Text="Credentials" Style="{StaticResource Section}" />
+                    <Label Content="User name (user, DOMAIN\user or user@domain)" />
+                    <TextBox x:Name="UserBox" />
+                    <Label Content="Password" />
+                    <PasswordBox x:Name="PasswordBox" />
+                    <CheckBox x:Name="SavePasswordBox" Content="Save this password (stored in Windows Credential Manager)" Margin="0,8,0,0" />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Display -->
+            <TabItem Header="Display">
+                <StackPanel Margin="16">
+                    <Label Content="Remote desktop size" />
+                    <ComboBox x:Name="SizeModeBox" Width="260" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="Fit to window (resize the remote desktop)" />
+                        <ComboBoxItem Content="Fixed size, scaled to fit (smart sizing)" />
+                        <ComboBoxItem Content="Fixed size, with scrollbars" />
+                    </ComboBox>
+                    <StackPanel x:Name="FixedSizePanel" Orientation="Horizontal" Margin="0,8,0,0">
+                        <Label Content="Width" Margin="0,6,6,2" />
+                        <TextBox x:Name="WidthBox" Width="80" />
+                        <Label Content="Height" Margin="12,6,6,2" />
+                        <TextBox x:Name="HeightBox" Width="80" />
+                    </StackPanel>
+                    <Label Content="Colors" />
+                    <ComboBox x:Name="ColorDepthBox" Width="200" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="High Color (15 bit)" Tag="15" />
+                        <ComboBoxItem Content="High Color (16 bit)" Tag="16" />
+                        <ComboBoxItem Content="True Color (24 bit)" Tag="24" />
+                        <ComboBoxItem Content="Highest Quality (32 bit)" Tag="32" />
+                    </ComboBox>
+                    <Label Content="Scale (DPI) - blank to match this computer" />
+                    <TextBox x:Name="ScaleBox" Width="100" HorizontalAlignment="Left" ToolTip="100 to 500" />
+                    <CheckBox x:Name="FullScreenBox" Content="Start in full screen" Margin="0,10,0,0" />
+                    <CheckBox x:Name="MultiMonBox" Content="Use all my monitors (full screen)" />
+                    <CheckBox x:Name="ConnectionBarBox" Content="Show the connection bar in full screen" />
+                    <CheckBox x:Name="PinBarBox" Content="Pin the connection bar" />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Local Resources -->
+            <TabItem Header="Local Resources">
+                <StackPanel Margin="16">
+                    <Label Content="Remote audio playback" />
+                    <ComboBox x:Name="AudioBox" Width="260" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="Play on this computer" />
+                        <ComboBoxItem Content="Play on the remote computer" />
+                        <ComboBoxItem Content="Do not play" />
+                    </ComboBox>
+                    <CheckBox x:Name="AudioCaptureBox" Content="Record audio from this computer (microphone)" Margin="0,8,0,0" />
+                    <Label Content="Apply Windows key combinations" />
+                    <ComboBox x:Name="KeyboardBox" Width="320" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="On this computer" />
+                        <ComboBoxItem Content="On the remote computer" />
+                        <ComboBoxItem Content="Only when using full screen" />
+                    </ComboBox>
+                    <TextBlock Text="Redirect to the remote computer" Style="{StaticResource Section}" />
+                    <CheckBox x:Name="ClipboardBox" Content="Clipboard" />
+                    <CheckBox x:Name="PrintersBox" Content="Printers" />
+                    <CheckBox x:Name="SmartCardBox" Content="Smart cards and Windows Hello for Business" />
+                    <CheckBox x:Name="PortsBox" Content="Ports (COM / LPT)" />
+                    <CheckBox x:Name="DevicesBox" Content="Plug and play devices" />
+                    <CheckBox x:Name="AllDrivesBox" Content="All drives" />
+                    <CheckBox x:Name="DynamicDrivesBox" Content="Drives I plug in later" />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Experience -->
+            <TabItem Header="Experience">
+                <StackPanel Margin="16">
+                    <Label Content="Connection speed (controls the defaults below)" />
+                    <ComboBox x:Name="SpeedBox" Width="320" HorizontalAlignment="Left" SelectionChanged="SpeedBox_SelectionChanged">
+                        <ComboBoxItem Content="Detect connection quality automatically" Tag="7" />
+                        <ComboBoxItem Content="Modem (56 kbps)" Tag="1" />
+                        <ComboBoxItem Content="Low-speed broadband" Tag="2" />
+                        <ComboBoxItem Content="Satellite" Tag="3" />
+                        <ComboBoxItem Content="High-speed broadband" Tag="4" />
+                        <ComboBoxItem Content="WAN" Tag="5" />
+                        <ComboBoxItem Content="LAN (10 Mbps or higher)" Tag="6" />
+                    </ComboBox>
+                    <TextBlock Text="Allow the following" Style="{StaticResource Section}" />
+                    <CheckBox x:Name="WallpaperBox" Content="Desktop background" />
+                    <CheckBox x:Name="FontSmoothingBox" Content="Font smoothing" />
+                    <CheckBox x:Name="CompositionBox" Content="Desktop composition" />
+                    <CheckBox x:Name="WindowDragBox" Content="Show window contents while dragging" />
+                    <CheckBox x:Name="AnimationBox" Content="Menu and window animation" />
+                    <CheckBox x:Name="ThemesBox" Content="Visual styles" />
+                    <CheckBox x:Name="BitmapCacheBox" Content="Persistent bitmap caching" />
+                    <CheckBox x:Name="AutoReconnectBox" Content="Reconnect automatically if the connection is dropped" Margin="0,8,0,0" />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Security -->
+            <TabItem Header="Security">
+                <StackPanel Margin="16">
+                    <Label Content="If server authentication fails" />
+                    <ComboBox x:Name="ServerAuthBox" Width="300" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="Connect and don't warn me" />
+                        <ComboBoxItem Content="Warn me" />
+                        <ComboBoxItem Content="Do not connect" />
+                    </ComboBox>
+                    <CheckBox x:Name="NlaBox" Content="Use Network Level Authentication (recommended)" Margin="0,12,0,0" />
+                    <CheckBox x:Name="RestrictedAdminBox" Content="Restricted Admin mode (do not send my credentials to the host)" />
+                    <CheckBox x:Name="CredGuardBox" Content="Remote Credential Guard (keep my credentials on this computer)" />
+                    <CheckBox x:Name="AdminSessionBox" Content="Connect to the console / administrative session" />
+                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMuted}" Margin="0,14,0,0"
+                               Text="Network Level Authentication verifies your identity before a full session starts and is the safe default for connecting over your home network. Turn it off only for older systems that do not support it." />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Gateway -->
+            <TabItem Header="Gateway">
+                <StackPanel Margin="16">
+                    <Label Content="Remote Desktop Gateway" />
+                    <ComboBox x:Name="GatewayUsageBox" Width="320" HorizontalAlignment="Left" SelectionChanged="GatewayUsageBox_SelectionChanged">
+                        <ComboBoxItem Content="Don't use a gateway" />
+                        <ComboBoxItem Content="Always use a gateway" />
+                        <ComboBoxItem Content="Detect automatically" />
+                    </ComboBox>
+                    <StackPanel x:Name="GatewayDetails">
+                        <Label Content="Gateway server name" />
+                        <TextBox x:Name="GatewayHostBox" />
+                        <CheckBox x:Name="GatewaySameCredsBox" Content="Use my connection credentials for the gateway" Margin="0,10,0,0" />
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMuted}" Margin="0,14,0,0"
+                               Text="A gateway lets you reach a computer on a private network from outside without a VPN. Leave this off for connections within your own home network." />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Content="Cancel" Width="90" Click="Cancel_Click" Margin="0,0,8,0" IsCancel="True" />
+            <Button Content="Save" Width="110" Style="{StaticResource AccentButton}" Click="Save_Click" IsDefault="True" />
+        </StackPanel>
+    </Grid>
+</Window>

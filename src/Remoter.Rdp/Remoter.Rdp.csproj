@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Remoter.Rdp</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Description>Hosts the Microsoft RDP ActiveX control and maps connection profiles onto it.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Remoter.Core\Remoter.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--
+      The interop assembly is generated once from mstscax.dll with tools/Generate-Interop.ps1,
+      because the .NET SDK build cannot run COMReference (ResolveComReference) itself.
+    -->
+    <Reference Include="Interop.MSTSCLib">
+      <HintPath>..\..\lib\Interop.MSTSCLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

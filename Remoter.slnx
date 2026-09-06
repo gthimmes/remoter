@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Remoter.App/Remoter.App.csproj" />
+    <Project Path="src/Remoter.Core/Remoter.Core.csproj" />
+    <Project Path="src/Remoter.Rdp/Remoter.Rdp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Remoter.Core.Tests/Remoter.Core.Tests.csproj" />
+  </Folder>
+</Solution>
