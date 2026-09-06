@@ -39,9 +39,20 @@ public class RdpFileTests
         Assert.False(p.LocalResources.Clipboard);
         Assert.Contains("C:", p.LocalResources.Drives);
         Assert.True(p.LocalResources.DynamicDrives);
-        Assert.Equal(ServerAuthenticationPolicy.DoNotConnect, p.Security.ServerAuthentication);
+        Assert.Equal(ServerAuthenticationPolicy.Warn, p.Security.ServerAuthentication);
         Assert.Equal(GatewayUsage.Always, p.Gateway.Usage);
         Assert.Equal("gw.example.com", p.Gateway.Hostname);
+    }
+
+    [Theory]
+    [InlineData(0, ServerAuthenticationPolicy.AlwaysConnect)]
+    [InlineData(1, ServerAuthenticationPolicy.DoNotConnect)]
+    [InlineData(2, ServerAuthenticationPolicy.Warn)]
+    public void Parse_AuthenticationLevel_MatchesRdpSemantics(int level, ServerAuthenticationPolicy expected)
+    {
+        // .rdp "authentication level": 0 connect without warning, 1 do not connect, 2 warn.
+        var p = RdpFile.Parse($"full address:s:host\r\nauthentication level:i:{level}");
+        Assert.Equal(expected, p.Security.ServerAuthentication);
     }
 
     [Fact]

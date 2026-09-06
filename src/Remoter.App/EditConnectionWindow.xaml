@@ -130,9 +130,9 @@
                 <StackPanel Margin="16">
                     <Label Content="If server authentication fails" />
                     <ComboBox x:Name="ServerAuthBox" Width="300" HorizontalAlignment="Left">
-                        <ComboBoxItem Content="Connect and don't warn me" />
-                        <ComboBoxItem Content="Warn me" />
-                        <ComboBoxItem Content="Do not connect" />
+                        <ComboBoxItem Content="Warn me and let me connect" Tag="2" />
+                        <ComboBoxItem Content="Connect and don't warn me" Tag="0" />
+                        <ComboBoxItem Content="Do not connect" Tag="1" />
                     </ComboBox>
                     <CheckBox x:Name="NlaBox" Content="Use Network Level Authentication (recommended)" Margin="0,12,0,0" />
                     <CheckBox x:Name="RestrictedAdminBox" Content="Restricted Admin mode (do not send my credentials to the host)" />

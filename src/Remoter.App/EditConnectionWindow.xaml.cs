@@ -70,7 +70,7 @@ public partial class EditConnectionWindow : Window
         BitmapCacheBox.IsChecked = p.Experience.PersistentBitmapCaching;
         AutoReconnectBox.IsChecked = p.Experience.AutoReconnect;
 
-        ServerAuthBox.SelectedIndex = (int)p.Security.ServerAuthentication;
+        SelectByTag(ServerAuthBox, ((int)p.Security.ServerAuthentication).ToString());
         NlaBox.IsChecked = p.Security.NetworkLevelAuthentication;
         RestrictedAdminBox.IsChecked = p.Security.RestrictedAdmin;
         CredGuardBox.IsChecked = p.Security.RemoteCredentialGuard;
@@ -126,7 +126,7 @@ public partial class EditConnectionWindow : Window
         p.Experience.PersistentBitmapCaching = BitmapCacheBox.IsChecked == true;
         p.Experience.AutoReconnect = AutoReconnectBox.IsChecked == true;
 
-        p.Security.ServerAuthentication = (ServerAuthenticationPolicy)Math.Max(0, ServerAuthBox.SelectedIndex);
+        p.Security.ServerAuthentication = (ServerAuthenticationPolicy)TagInt(ServerAuthBox, (int)ServerAuthenticationPolicy.Warn);
         p.Security.NetworkLevelAuthentication = NlaBox.IsChecked == true;
         p.Security.RestrictedAdmin = RestrictedAdminBox.IsChecked == true;
         p.Security.RemoteCredentialGuard = CredGuardBox.IsChecked == true;

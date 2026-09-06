@@ -41,15 +41,19 @@ public enum ConnectionSpeed
     AutoDetect = 7,
 }
 
-/// <summary>What to do when the server's identity cannot be verified. Values match AuthenticationLevel.</summary>
+/// <summary>
+/// What to do when the server's identity cannot be verified. Values match the control's
+/// AuthenticationLevel and the ".rdp" "authentication level" field:
+/// 0 = connect without warning, 1 = do not connect, 2 = warn and let the user choose.
+/// </summary>
 public enum ServerAuthenticationPolicy
 {
     /// <summary>Connect and don't warn me.</summary>
     AlwaysConnect = 0,
-    /// <summary>Warn me (the mstsc default).</summary>
-    Warn = 1,
-    /// <summary>Do not connect.</summary>
-    DoNotConnect = 2,
+    /// <summary>Do not connect if the server cannot be authenticated.</summary>
+    DoNotConnect = 1,
+    /// <summary>Warn me and let me choose whether to proceed (the mstsc default).</summary>
+    Warn = 2,
 }
 
 /// <summary>Values match GatewayUsageMethod.</summary>
