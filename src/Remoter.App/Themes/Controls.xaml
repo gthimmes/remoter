@@ -31,14 +31,15 @@
     <Style TargetType="TextBox">
         <Setter Property="Foreground" Value="{StaticResource Text}" />
         <Setter Property="CaretBrush" Value="{StaticResource Text}" />
-        <Setter Property="SelectionBrush" Value="{StaticResource Selection}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource Accent}" />
+        <Setter Property="SelectionOpacity" Value="0.35" />
         <Setter Property="BorderBrush" Value="{StaticResource Border}" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="b" Background="#2A2D33" BorderBrush="{TemplateBinding BorderBrush}"
+                    <Border x:Name="b" Background="{StaticResource Input}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1" CornerRadius="6">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
                     </Border>
@@ -58,14 +59,15 @@
     <Style TargetType="PasswordBox">
         <Setter Property="Foreground" Value="{StaticResource Text}" />
         <Setter Property="CaretBrush" Value="{StaticResource Text}" />
-        <Setter Property="SelectionBrush" Value="{StaticResource Selection}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource Accent}" />
+        <Setter Property="SelectionOpacity" Value="0.35" />
         <Setter Property="BorderBrush" Value="{StaticResource Border}" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
-                    <Border x:Name="b" Background="#2A2D33" BorderBrush="{TemplateBinding BorderBrush}"
+                    <Border x:Name="b" Background="{StaticResource Input}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1" CornerRadius="6">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
                     </Border>
@@ -99,7 +101,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
                     <Grid>
-                        <Border x:Name="b" Background="#2A2D33" BorderBrush="{StaticResource Border}"
+                        <Border x:Name="b" Background="{StaticResource Input}" BorderBrush="{StaticResource Border}"
                                 BorderThickness="1" CornerRadius="6" />
                         <ToggleButton Style="{StaticResource ComboToggle}"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
@@ -111,7 +113,7 @@
                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" />
                         <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
                                AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
-                            <Border Background="#24272D" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1"
+                            <Border Background="{StaticResource PanelAlt}" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1"
                                     CornerRadius="6" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                     Margin="0,4,0,0">
                                 <ScrollViewer MaxHeight="280">
@@ -161,8 +163,8 @@
                 <ControlTemplate TargetType="CheckBox">
                     <StackPanel Orientation="Horizontal" Background="Transparent">
                         <Border x:Name="box" Width="18" Height="18" CornerRadius="4" VerticalAlignment="Center"
-                                Background="#2A2D33" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1">
-                            <Path x:Name="tick" Data="M2,6 L6,10 L12,3" Stroke="White" StrokeThickness="2"
+                                Background="{StaticResource Input}" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1">
+                            <Path x:Name="tick" Data="M2,6 L6,10 L12,3" Stroke="{StaticResource TextOnAccent}" StrokeThickness="2"
                                   Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
                         </Border>
                         <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center" />
@@ -188,7 +190,7 @@
     <!-- Default (secondary) button. -->
     <Style TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Text}" />
-        <Setter Property="Background" Value="#2A2D33" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{StaticResource Border}" />
         <Setter Property="Padding" Value="14,7" />
         <Setter Property="FontSize" Value="13" />
@@ -203,11 +205,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="b" Property="Background" Value="#343841" />
+                            <Setter TargetName="b" Property="Background" Value="{StaticResource PanelAlt}" />
                             <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource BorderStrong}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="b" Property="Background" Value="#2E323A" />
+                            <Setter TargetName="b" Property="Background" Value="{StaticResource Border}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.45" />
@@ -220,7 +222,7 @@
 
     <!-- Primary action button. -->
     <Style x:Key="AccentButton" TargetType="Button">
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{StaticResource TextOnAccent}" />
         <Setter Property="Background" Value="{StaticResource Accent}" />
         <Setter Property="Padding" Value="16,7" />
         <Setter Property="FontSize" Value="13" />
@@ -238,7 +240,7 @@
                             <Setter TargetName="b" Property="Background" Value="{StaticResource AccentHover}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="b" Property="Background" Value="#4C7DF0" />
+                            <Setter TargetName="b" Property="Background" Value="{StaticResource AccentPressed}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.45" />
@@ -287,7 +289,7 @@
                             <Setter Property="FontWeight" Value="SemiBold" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="b" Property="Background" Value="#24272D" />
+                            <Setter TargetName="b" Property="Background" Value="{StaticResource Hover}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

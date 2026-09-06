@@ -24,7 +24,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Text box + recents caret share one rounded frame -->
-                    <Border Grid.Column="0" Background="#2A2D33" CornerRadius="6" BorderThickness="1"
+                    <Border Grid.Column="0" Background="{StaticResource Input}" CornerRadius="6" BorderThickness="1"
                             BorderBrush="{StaticResource Border}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -53,7 +53,7 @@
 
                     <Popup x:Name="RecentsPopup" PlacementTarget="{Binding ElementName=QuickHost}" Placement="Bottom"
                            StaysOpen="False" AllowsTransparency="True" PopupAnimation="Slide" HorizontalOffset="-1" VerticalOffset="6">
-                        <Border Background="#24272D" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1"
+                        <Border Background="{StaticResource PanelAlt}" BorderBrush="{StaticResource BorderStrong}" BorderThickness="1"
                                 CornerRadius="8" MinWidth="360" MaxHeight="360">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="18" ShadowDepth="0" Opacity="0.5" Color="Black" />
@@ -83,7 +83,7 @@
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="b" Property="Background" Value="#31353D" />
+                                                                <Setter TargetName="b" Property="Background" Value="{StaticResource PanelAlt}" />
                                                             </Trigger>
                                                             <Trigger Property="IsSelected" Value="True">
                                                                 <Setter TargetName="b" Property="Background" Value="{StaticResource Selection}" />
@@ -119,7 +119,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="SAVED CONNECTIONS" FontSize="11" FontWeight="SemiBold"
                                Foreground="{StaticResource TextFaint}" VerticalAlignment="Center" Margin="0,0,16,0" />
-                    <Border Background="#2A2D33" CornerRadius="6" BorderBrush="{StaticResource Border}" BorderThickness="1" Width="240">
+                    <Border Background="{StaticResource Input}" CornerRadius="6" BorderBrush="{StaticResource Border}" BorderThickness="1" Width="240">
                         <Grid>
                             <TextBox x:Name="SearchBox" BorderThickness="0" Background="Transparent"
                                      VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged">
@@ -176,7 +176,7 @@
                             <Setter Property="Background" Value="{StaticResource Selection}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#262930" />
+                            <Setter Property="Background" Value="{StaticResource Hover}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -189,7 +189,8 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="GroupItem">
                                         <StackPanel>
-                                            <Border Background="#1B1C20" Padding="12,7" Margin="0,4,0,0">
+                                            <Border Background="Transparent" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0"
+                                                    Padding="12,7" Margin="0,4,0,0">
                                                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12"
                                                            Foreground="{StaticResource TextMuted}" />
                                             </Border>
@@ -208,7 +209,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="★" FontSize="14" HorizontalAlignment="Center"
-                                           Foreground="#F5C451" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
+                                           Foreground="{StaticResource Favorite}" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

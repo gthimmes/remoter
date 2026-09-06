@@ -41,6 +41,7 @@
   <!-- Semantic -->
   <SolidColorBrush x:Key="Danger"            Color="#FFBF2A21" po:Freeze="True" />
   <SolidColorBrush x:Key="DangerSubtle"      Color="#1ABF2A21" po:Freeze="True" />
+  <SolidColorBrush x:Key="Warning"           Color="#FF9A6410" po:Freeze="True" />
   <SolidColorBrush x:Key="Success"           Color="#FF15754F" po:Freeze="True" />
   <SolidColorBrush x:Key="Favorite"          Color="#FF9C6A15" po:Freeze="True" />
 

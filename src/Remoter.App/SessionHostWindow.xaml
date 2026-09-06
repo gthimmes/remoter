@@ -71,7 +71,27 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center"
-                                             Fill="{Binding StatusBrush}" ToolTip="{Binding StatusText}" />
+                                             ToolTip="{Binding StatusText}">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="{StaticResource TextFaint}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding StatusKey}" Value="Connecting">
+                                                        <Setter Property="Fill" Value="{StaticResource Warning}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusKey}" Value="Connected">
+                                                        <Setter Property="Fill" Value="{StaticResource Success}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusKey}" Value="Reconnecting">
+                                                        <Setter Property="Fill" Value="{StaticResource Accent}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusKey}" Value="Failed">
+                                                        <Setter Property="Fill" Value="{StaticResource Danger}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
                                     <TextBlock Text="{Binding Title}" VerticalAlignment="Center"
                                                MaxWidth="180" TextTrimming="CharacterEllipsis"
                                                ToolTip="{Binding Address}" />

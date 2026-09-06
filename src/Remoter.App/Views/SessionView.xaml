@@ -13,7 +13,7 @@
           Disconnect errors show here rather than in a message box: a modal dialog would freeze
           every other live session in the window until it was dismissed.
         -->
-        <Border x:Name="Banner" Grid.Row="0" Background="#3A2226" BorderBrush="{StaticResource Danger}"
+        <Border x:Name="Banner" Grid.Row="0" Background="{StaticResource DangerSubtle}" BorderBrush="{StaticResource Danger}"
                 BorderThickness="0,0,0,1" Padding="16,10" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
