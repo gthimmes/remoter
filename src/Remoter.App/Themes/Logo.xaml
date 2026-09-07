@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    The Remoter mark, as vector geometry rather than a bitmap, so it stays sharp at
+    any DPI and can take a theme brush. Source of truth is assets/logo/mark.svg at
+    the repo root; the numbers below are that file's 256 grid, unchanged.
+
+    Two styles:
+      AppMarkBadge  the full icon including its brand-colored rounded square. Use
+                    where the app identifies itself, such as the title bar. Brand
+                    color is fixed on purpose and does not follow the theme.
+      AppMarkMono   the geometry alone in Foreground, cropped tight. Use where a
+                    single-color glyph is needed. Defaults to the Accent brush.
+
+    Both are square. Size them from the caller:
+      <ContentControl Style="{StaticResource AppMarkBadge}" Width="16" Height="16" />
+  -->
+
+  <LinearGradientBrush x:Key="MarkGradient" StartPoint="0,0" EndPoint="1,1">
+    <GradientStop Offset="0" Color="#FF4E8FFF" />
+    <GradientStop Offset="1" Color="#FF1745B8" />
+  </LinearGradientBrush>
+
+  <Style x:Key="AppMarkBadge" TargetType="ContentControl">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="IsTabStop" Value="False" />
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ContentControl">
+          <Viewbox Stretch="Uniform">
+            <Canvas Width="256" Height="256">
+              <Rectangle Width="256" Height="256" RadiusX="58" RadiusY="58"
+                         Fill="{StaticResource MarkGradient}" />
+              <Rectangle Canvas.Left="134" Canvas.Top="56" Width="64" Height="48"
+                         RadiusX="9" RadiusY="9" Fill="White" />
+              <Rectangle Canvas.Left="62" Canvas.Top="126" Width="96" Height="72"
+                         RadiusX="13" RadiusY="13"
+                         Stroke="White" StrokeThickness="13" />
+            </Canvas>
+          </Viewbox>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="AppMarkMono" TargetType="ContentControl">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="IsTabStop" Value="False" />
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ContentControl">
+          <Viewbox Stretch="Uniform">
+            <!-- Same geometry as the badge, translated so the marks sit tight in
+                 the box with no container padding around them. -->
+            <Canvas Width="156" Height="156">
+              <Rectangle Canvas.Left="84" Canvas.Top="4" Width="64" Height="48"
+                         RadiusX="9" RadiusY="9"
+                         Fill="{TemplateBinding Foreground}" />
+              <Rectangle Canvas.Left="12" Canvas.Top="74" Width="96" Height="72"
+                         RadiusX="13" RadiusY="13"
+                         Stroke="{TemplateBinding Foreground}" StrokeThickness="13" />
+            </Canvas>
+          </Viewbox>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>

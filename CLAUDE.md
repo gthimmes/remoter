@@ -46,6 +46,20 @@ truth for color, type, spacing and control states.
   when you next touch it substantially, not as a drive-by.
 - Nullable and implicit usings are on solution-wide via `Directory.Build.props`.
 
+## Brand mark
+
+Source of truth is `assets/logo/mark.svg`. `Remoter.ico` is built from it, and
+`src/Remoter.App/Themes/Logo.xaml` restates the same geometry as WPF vector shapes for
+in-app use. Change the SVG and all three have to move together.
+
+- The 16, 20 and 24px icon layers are hand-drawn (`mark-16.svg`, `mark-20.svg`,
+  `mark-24.svg`), not downsampled, because the corner radii turn to mush below 32px.
+  Never regenerate the .ico by scaling `mark.svg` alone; you will lose them.
+- The .ico carries 16, 20, 24, 32, 48, 64, 128 and 256. Small layers are 32-bit BGRA
+  DIB entries, the 256 is a PNG entry.
+- Brand gradient is `#4E8FFF` to `#1745B8`, taken from the UI's `Accent` and `AccentFill`.
+  Flat `#2F6BE0` is the substitute at 24px and below, where a gradient reads as noise.
+
 ## Gotchas
 
 - `lib/Interop.MSTSCLib.dll` is committed on purpose. The SDK build cannot generate COM

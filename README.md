@@ -1,3 +1,5 @@
+<img src="assets/logo/mark-128.png" width="84" alt="">
+
 # Remoter
 
 A Windows Remote Desktop (RDP) client. It hosts the same Remote Desktop protocol

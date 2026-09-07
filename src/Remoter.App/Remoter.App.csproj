@@ -5,6 +5,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\Remoter.ico</ApplicationIcon>
     <AssemblyName>Remoter</AssemblyName>
     <Description>Remoter - a Windows Remote Desktop client.</Description>
   </PropertyGroup>
