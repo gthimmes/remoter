@@ -15,6 +15,30 @@ public partial class EditConnectionWindow : Window
         _profile = profile;
         LoadFrom(profile, existingPassword);
         SizeModeBox.SelectionChanged += (_, _) => UpdateSizePanel();
+        ShowSection(0);
+    }
+
+    /// <summary>
+    /// Every section is built up front and shown one at a time. Swapping them through a
+    /// ContentControl would take the hidden ones out of the tree and with them the field names
+    /// the rest of this class works through.
+    /// </summary>
+    private void ShowSection(int index)
+    {
+        var sections = new[]
+        {
+            GeneralPanel, OrganizePanel, DisplayPanel, LocalResourcesPanel,
+            ExperiencePanel, SecurityPanel, GatewayPanel,
+        };
+        for (var i = 0; i < sections.Length; i++)
+            sections[i].Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
+        ContentScroller.ScrollToTop();
+    }
+
+    private void Rail_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (IsLoaded || GeneralPanel is not null)
+            ShowSection(Rail.SelectedIndex);
     }
 
     /// <summary>

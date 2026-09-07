@@ -29,6 +29,7 @@
 
     <!-- Rounded, readable text input. -->
     <Style TargetType="TextBox">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="CaretBrush" Value="{DynamicResource Text}" />
@@ -66,6 +67,7 @@
     </Style>
 
     <Style TargetType="PasswordBox">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="CaretBrush" Value="{DynamicResource Text}" />
@@ -112,6 +114,7 @@
         </Setter>
     </Style>
     <Style TargetType="ComboBox">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Height" Value="32" />
@@ -180,17 +183,17 @@
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
                     <StackPanel Orientation="Horizontal" Background="Transparent">
-                        <Border x:Name="box" Width="18" Height="18" CornerRadius="4" VerticalAlignment="Center"
+                        <Border x:Name="box" Width="16" Height="16" CornerRadius="4" VerticalAlignment="Center"
                                 Background="{DynamicResource Input}" BorderBrush="{DynamicResource BorderStrong}" BorderThickness="1">
-                            <Path x:Name="tick" Data="M2,6 L6,10 L12,3" Stroke="{DynamicResource TextOnAccent}" StrokeThickness="2"
+                            <Path x:Name="tick" Data="M1,5 L5,9 L11,2" Stroke="{DynamicResource TextOnAccent}" StrokeThickness="1.6"
                                   Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
                         </Border>
-                        <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center" />
+                        <ContentPresenter Margin="9,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="box" Property="Background" Value="{DynamicResource Accent}" />
-                            <Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                            <Setter TargetName="box" Property="Background" Value="{DynamicResource AccentFill}" />
+                            <Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource AccentFill}" />
                             <Setter TargetName="tick" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -210,6 +213,7 @@
       button belongs on a window; everything else recedes until you point at it.
     -->
     <Style x:Key="ButtonBase" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Padding" Value="14,0" />
         <Setter Property="FontSize" Value="13" />
@@ -506,6 +510,83 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!--
+      Connection settings dialog. Seven sections do not fit across a tab strip at this width, so
+      they live in a rail down the left; these are the pieces that dresses.
+    -->
+    <Style x:Key="RailItem" TargetType="ListBoxItem">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Bd" Background="Transparent" CornerRadius="6"
+                            Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PanelAlt}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Text}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentSubtle}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Section heading: small caps label with a hairline running out to the edge. -->
+    <Style x:Key="SectionHeading" TargetType="ContentControl">
+        <Setter Property="Margin" Value="0,24,0,10" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{TemplateBinding Content}" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFaint}" />
+                        <Border Grid.Column="1" Height="1" Margin="10,1,0,0" VerticalAlignment="Center"
+                                Background="{DynamicResource BorderStrong}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- One field: label, 6 DIP, input. 16 DIP to the next field. -->
+    <Style x:Key="Field" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0,0,0,16" />
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+        <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+
+    <!-- Format hints and explanations live under the input, never in the label. -->
+    <Style x:Key="Helper" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFaint}" />
+        <Setter Property="Margin" Value="0,6,0,0" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <!--
