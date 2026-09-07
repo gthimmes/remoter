@@ -44,5 +44,14 @@
   <SolidColorBrush x:Key="Warning"           Color="#FF9A6410" po:Freeze="True" />
   <SolidColorBrush x:Key="Success"           Color="#FF15754F" po:Freeze="True" />
   <SolidColorBrush x:Key="Favorite"          Color="#FF9C6A15" po:Freeze="True" />
+  <!-- Same four hues, darkened for a light ground; fill is the hue at 11 percent. -->
+  <SolidColorBrush x:Key="Tag0"              Color="#FF15754F" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag0Subtle"        Color="#1C15754F" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag1"              Color="#FF1D4FD0" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag1Subtle"        Color="#1C1D4FD0" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag2"              Color="#FF9A6410" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag2Subtle"        Color="#1C9A6410" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag3"              Color="#FF6B3FBF" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag3Subtle"        Color="#1C6B3FBF" po:Freeze="True" />
 
 </ResourceDictionary>

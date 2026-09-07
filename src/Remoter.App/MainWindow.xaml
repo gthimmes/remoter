@@ -230,40 +230,37 @@
             </Grid>
         </Border>
 
+        <!--
+          Three ink levels and nothing else: Text for the name, TextMuted for data, TextFaint for
+          the timestamp. On a selected row the faint cells promote a step, because faint ink does
+          not hold up against the selection tint.
+        -->
         <ListView x:Name="List" Grid.Row="3" Background="{DynamicResource Bg}" BorderThickness="0"
-                  Foreground="{DynamicResource Text}" Margin="10,8"
+                  Foreground="{DynamicResource TextMuted}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   MouseDoubleClick="List_MouseDoubleClick">
             <ListView.Resources>
-                <Style TargetType="GridViewColumnHeader">
+                <Style x:Key="Cell" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Margin" Value="12,0" />
                     <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
-                    <Setter Property="HorizontalContentAlignment" Value="Left" />
-                    <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="FontSize" Value="12" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="GridViewColumnHeader">
-                                <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Border}"
-                                        BorderThickness="0,0,1,1" Padding="12,8">
-                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                 </Style>
-                <Style TargetType="ListViewItem">
+                <Style x:Key="NameCell" TargetType="TextBlock" BasedOn="{StaticResource Cell}">
                     <Setter Property="Foreground" Value="{DynamicResource Text}" />
-                    <Setter Property="Padding" Value="8,9" />
-                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="FontWeight" Value="Medium" />
+                </Style>
+                <Style x:Key="FaintCell" TargetType="TextBlock" BasedOn="{StaticResource Cell}">
+                    <Setter Property="Foreground" Value="{DynamicResource TextFaint}" />
+                    <Setter Property="Typography.NumeralAlignment" Value="Tabular" />
                     <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource Selection}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource Hover}" />
-                        </Trigger>
+                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                     Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </ListView.Resources>
+
             <ListView.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.ContainerStyle>
@@ -272,13 +269,39 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="GroupItem">
                                         <StackPanel>
-                                            <Border Background="Transparent" BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0"
-                                                    Padding="12,7" Margin="0,4,0,0">
-                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12"
-                                                           Foreground="{DynamicResource TextMuted}" />
+                                            <Border BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0">
+                                                <ToggleButton x:Name="Toggle" IsChecked="True"
+                                                              Style="{StaticResource GroupToggle}">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Path x:Name="Chevron" Data="M0,0 L4,4 L0,8" Width="5" Height="9"
+                                                              Stroke="{DynamicResource TextFaint}" StrokeThickness="1.4"
+                                                              VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                            <Path.RenderTransform>
+                                                                <RotateTransform Angle="90" />
+                                                            </Path.RenderTransform>
+                                                        </Path>
+                                                        <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="12"
+                                                                   FontWeight="Medium" Foreground="{DynamicResource TextMuted}" />
+                                                        <Border Background="{DynamicResource PanelAlt}" CornerRadius="4"
+                                                                Height="18" Padding="6,0" Margin="8,0,0,0">
+                                                            <TextBlock Text="{Binding ItemCount}" FontSize="11" FontWeight="Medium"
+                                                                       Foreground="{DynamicResource TextFaint}" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                </ToggleButton>
                                             </Border>
-                                            <ItemsPresenter />
+                                            <ItemsPresenter x:Name="Items" />
                                         </StackPanel>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger SourceName="Toggle" Property="IsChecked" Value="False">
+                                                <Setter TargetName="Items" Property="Visibility" Value="Collapsed" />
+                                                <Setter TargetName="Chevron" Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="0" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -286,21 +309,114 @@
                     </GroupStyle.ContainerStyle>
                 </GroupStyle>
             </ListView.GroupStyle>
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="34">
+                    <!-- Gutter. The favourite star, with room beside it for the live session dot. -->
+                    <GridViewColumn Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="★" FontSize="14" HorizontalAlignment="Center"
-                                           Foreground="{DynamicResource Favorite}" Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
+                                <TextBlock Text="&#x2605;" FontSize="12" HorizontalAlignment="Center" Margin="0"
+                                           Foreground="{DynamicResource Favorite}"
+                                           Visibility="{Binding Favorite, Converter={StaticResource BoolToVisibility}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding DisplayName}" />
-                    <GridViewColumn Header="Computer" Width="210" DisplayMemberBinding="{Binding Host}" />
-                    <GridViewColumn Header="User" Width="170" DisplayMemberBinding="{Binding QualifiedUsername}" />
-                    <GridViewColumn Header="Tags" Width="150" DisplayMemberBinding="{Binding TagList}" />
-                    <GridViewColumn Header="Last connected" Width="150" DisplayMemberBinding="{Binding LastConnected}" />
+
+                    <GridViewColumn Header="Name" Width="220">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}" Style="{StaticResource NameCell}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Computer" Width="210">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Host}" Style="{StaticResource Cell}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="User" Width="170">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding QualifiedUsername}" Style="{StaticResource Cell}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <!--
+                      Tag pills. The hue comes from the tag text, so a tag looks the same in every
+                      row; the converter returns an index and the triggers map it to a token, so a
+                      theme swap still repaints them.
+                    -->
+                    <GridViewColumn Header="Tags" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Tags}" Margin="12,0" VerticalAlignment="Center">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Height="18" CornerRadius="4" Padding="6,0" Margin="0,0,4,0"
+                                                    VerticalAlignment="Center">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="{DynamicResource Tag0Subtle}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="1">
+                                                                <Setter Property="Background" Value="{DynamicResource Tag1Subtle}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="2">
+                                                                <Setter Property="Background" Value="{DynamicResource Tag2Subtle}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="3">
+                                                                <Setter Property="Background" Value="{DynamicResource Tag3Subtle}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock Text="{Binding}" FontSize="11" FontWeight="Medium"
+                                                           VerticalAlignment="Center">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                            <Setter Property="Foreground" Value="{DynamicResource Tag0}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="1">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource Tag1}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="2">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource Tag2}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Converter={StaticResource TagHue}}" Value="3">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource Tag3}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <!-- Width is set in code so the last column takes up the slack. -->
+                    <GridViewColumn x:Name="LastConnectedColumn" Header="Last connected" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LastConnected, StringFormat={}{0:g}}"
+                                           Style="{StaticResource FaintCell}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -45,6 +46,7 @@ public partial class MainWindow : Window
         RefreshThemeMenu();
 
         List.SelectionChanged += (_, _) => RefreshRowActions();
+        List.SizeChanged += (_, _) => StretchLastColumn();
         StateChanged += (_, _) => RefreshMaximiseButton();
         RefreshRowActions();
         RefreshMaximiseButton();
@@ -74,6 +76,21 @@ public partial class MainWindow : Window
         Root.Margin = maximised
             ? new Thickness(SystemParameters.WindowResizeBorderThickness.Left + SystemParameters.FixedFrameVerticalBorderWidth)
             : default;
+    }
+
+    /// <summary>
+    /// Gives the last column whatever width the fixed ones leave, so rows fill the window instead
+    /// of stopping short with dead space on the right. A GridView has no star sizing to do this.
+    /// </summary>
+    private void StretchLastColumn()
+    {
+        if (List.View is not GridView grid || grid.Columns.Count == 0)
+            return;
+
+        var last = grid.Columns[^1];
+        var used = grid.Columns.Take(grid.Columns.Count - 1).Sum(c => c.ActualWidth);
+        var available = List.ActualWidth - used - SystemParameters.VerticalScrollBarWidth - 2;
+        last.Width = Math.Max(150, available);
     }
 
     /// <summary>Row actions mean nothing without a row, so they stay disabled until there is one.</summary>

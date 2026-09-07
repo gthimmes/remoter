@@ -48,5 +48,17 @@
   <SolidColorBrush x:Key="Warning"           Color="#FFE0A33C" po:Freeze="True" />
   <SolidColorBrush x:Key="Success"           Color="#FF3FB37F" po:Freeze="True" />
   <SolidColorBrush x:Key="Favorite"          Color="#FFF5C451" po:Freeze="True" />
+  <!--
+    Tag hues. Four, cycled by hashing the tag text, so a tag keeps its colour everywhere.
+    Fill is the hue at 16 percent; the text is the hue itself.
+  -->
+  <SolidColorBrush x:Key="Tag0"              Color="#FF3FB37F" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag0Subtle"        Color="#293FB37F" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag1"              Color="#FF4C8DFF" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag1Subtle"        Color="#294C8DFF" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag2"              Color="#FFE0A33C" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag2Subtle"        Color="#29E0A33C" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag3"              Color="#FFB98CF0" po:Freeze="True" />
+  <SolidColorBrush x:Key="Tag3Subtle"        Color="#29B98CF0" po:Freeze="True" />
 
 </ResourceDictionary>
