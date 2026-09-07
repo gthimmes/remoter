@@ -43,9 +43,48 @@ public partial class MainWindow : Window
 
         _theme.Changed += (_, _) => RefreshThemeMenu();
         RefreshThemeMenu();
+
+        List.SelectionChanged += (_, _) => RefreshRowActions();
+        StateChanged += (_, _) => RefreshMaximiseButton();
+        RefreshRowActions();
+        RefreshMaximiseButton();
     }
 
     private ConnectionProfile? Selected => List.SelectedItem as ConnectionProfile;
+
+    // ----- Window caption -----
+
+    private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+    private void MaximizeRestore_Click(object sender, RoutedEventArgs e) =>
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+
+    private void CloseWindow_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void RefreshMaximiseButton()
+    {
+        var maximised = WindowState == WindowState.Maximized;
+        // Segoe Fluent Icons: ChromeRestore and ChromeMaximize.
+        MaxButton.Content = maximised ? "" : "";
+        MaxButton.ToolTip = maximised ? "Restore" : "Maximise";
+        // The content is a private-use glyph, so the name has to be set for anything reading the UI.
+        System.Windows.Automation.AutomationProperties.SetName(MaxButton, maximised ? "Restore" : "Maximise");
+        // WindowChrome maximises to the full monitor including the resize border, which would
+        // push the edges off screen; inset by that border to bring them back.
+        Root.Margin = maximised
+            ? new Thickness(SystemParameters.WindowResizeBorderThickness.Left + SystemParameters.FixedFrameVerticalBorderWidth)
+            : default;
+    }
+
+    /// <summary>Row actions mean nothing without a row, so they stay disabled until there is one.</summary>
+    private void RefreshRowActions()
+    {
+        var hasSelection = Selected is not null;
+        EditButton.IsEnabled = hasSelection;
+        DuplicateButton.IsEnabled = hasSelection;
+        DeleteButton.IsEnabled = hasSelection;
+        ExportButton.IsEnabled = hasSelection;
+    }
 
     // ----- Appearance -----
 

@@ -34,6 +34,8 @@ public sealed class ThemeManager : IDisposable
         _ => WindowsPrefersLight() ? "Light" : "Dark",
     };
 
+    public bool IsDark => Resolved == "Dark";
+
     /// <summary>Raised after the applied theme changes, so any UI showing the choice can refresh.</summary>
     public event EventHandler? Changed;
 

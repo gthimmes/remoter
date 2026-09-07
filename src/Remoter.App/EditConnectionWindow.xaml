@@ -175,7 +175,7 @@
         </TabControl>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
-            <Button Content="Cancel" Width="90" Click="Cancel_Click" Margin="0,0,8,0" IsCancel="True" />
+            <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Width="90" Click="Cancel_Click" Margin="0,0,8,0" IsCancel="True" />
             <Button Content="Save" Width="110" Style="{StaticResource AccentButton}" Click="Save_Click" IsDefault="True" />
         </StackPanel>
     </Grid>

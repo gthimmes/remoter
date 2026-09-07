@@ -29,6 +29,12 @@ public partial class App : Application
         Theme = new ThemeManager(settingsStore, settingsStore.Load());
         Theme.Initialize();
 
+        // Every window that keeps the system caption gets it painted to match, as it appears and
+        // again whenever the theme changes. The main window supplies its own chrome and ignores this.
+        EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent,
+            new RoutedEventHandler((sender, _) => TitleBarTheme.Apply((Window)sender, Theme.IsDark)));
+        Theme.Changed += (_, _) => TitleBarTheme.ApplyToAll(Theme.IsDark);
+
         DispatcherUnhandledException += OnUnhandledException;
 
         var main = new MainWindow();
