@@ -9,14 +9,20 @@
 
     <Style TargetType="Window">
         <Setter Property="Background" Value="{DynamicResource Bg}" />
+        <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
         <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
     </Style>
 
+    <!--
+      No Foreground here. An implicit TextBlock style also reaches the TextBlock a button or list
+      item generates for its text, and a Foreground set here beat the control's own: every button
+      and rail label rendered in Text whatever its style asked for. The ink is set on the window
+      instead and inherits down, so a control's Foreground wins for its own label.
+    -->
     <Style TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
