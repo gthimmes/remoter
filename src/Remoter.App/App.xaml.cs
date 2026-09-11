@@ -38,6 +38,7 @@ public partial class App : Application
         EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent,
             new RoutedEventHandler((sender, _) => TitleBarTheme.Apply((Window)sender, Theme.IsDark)));
         Theme.Changed += (_, _) => TitleBarTheme.ApplyToAll(Theme.IsDark);
+        OverlayScroll.Register();
 
         DispatcherUnhandledException += OnUnhandledException;
 

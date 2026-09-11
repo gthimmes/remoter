@@ -89,7 +89,9 @@ public partial class MainWindow : Window
 
         var last = grid.Columns[^1];
         var used = grid.Columns.Take(grid.Columns.Count - 1).Sum(c => c.ActualWidth);
-        var available = List.ActualWidth - used - SystemParameters.VerticalScrollBarWidth - 2;
+        // The scrollbar floats over the rows rather than taking a column, so there is nothing to
+        // leave room for beyond the list's own hairline of padding.
+        var available = List.ActualWidth - used - 4;
         last.Width = Math.Max(150, available);
     }
 
