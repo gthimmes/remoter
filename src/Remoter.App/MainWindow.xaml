@@ -231,11 +231,16 @@
         </Border>
 
         <!--
+          Painted here rather than left to the window: with the list collapsed for the empty state,
+          nothing else covers this cell, and it showed through white.
+        -->
+        <Grid Grid.Row="3" Background="{DynamicResource Bg}">
+        <!--
           Three ink levels and nothing else: Text for the name, TextMuted for data, TextFaint for
           the timestamp. On a selected row the faint cells promote a step, because faint ink does
           not hold up against the selection tint.
         -->
-        <ListView x:Name="List" Grid.Row="3" Background="{DynamicResource Bg}" BorderThickness="0"
+        <ListView x:Name="List" Background="{DynamicResource Bg}" BorderThickness="0"
                   Foreground="{DynamicResource TextMuted}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   MouseDoubleClick="List_MouseDoubleClick">
@@ -420,6 +425,26 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <!--
+          First run. Without this a fresh install opened to column headers over a blank
+          rectangle, which reads as broken rather than empty.
+        -->
+        <StackPanel x:Name="EmptyState" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Visibility="Collapsed">
+            <ContentControl Style="{StaticResource AppMarkMono}" Width="48" Height="48"
+                            Foreground="{DynamicResource TextFaint}" HorizontalAlignment="Center" />
+            <TextBlock Text="No saved connections" FontSize="18" FontWeight="SemiBold"
+                       HorizontalAlignment="Center" Margin="0,16,0,0" />
+            <Button Content="New connection" Style="{StaticResource TonalButton}" Click="New_Click"
+                    HorizontalAlignment="Center" Margin="0,16,0,0" />
+        </StackPanel>
+
+        <!-- Connections exist, but the search hides all of them: a different message, no button. -->
+        <TextBlock x:Name="NoMatches" Text="No connections match your search." Visibility="Collapsed"
+                   Foreground="{DynamicResource TextFaint}" HorizontalAlignment="Center"
+                   VerticalAlignment="Top" Margin="0,72,0,0" />
+        </Grid>
 
         <!-- Status bar -->
         <Border Grid.Row="4" Background="{DynamicResource Bg}" Padding="16,0"

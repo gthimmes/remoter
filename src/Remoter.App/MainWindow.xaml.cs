@@ -134,12 +134,26 @@ public partial class MainWindow : Window
         Status.Text = _items.Count == 0
             ? "No saved connections yet. Use New, or type a computer name above."
             : $"{_items.Count} saved connection{(_items.Count == 1 ? "" : "s")}.";
+        RefreshEmptyState();
+    }
+
+    /// <summary>
+    /// Nothing saved gets the first-run panel in place of the list. Something saved but all of it
+    /// filtered out keeps the list's headers and says so, since offering New there would be wrong.
+    /// </summary>
+    private void RefreshEmptyState()
+    {
+        var nothingSaved = _items.Count == 0;
+        List.Visibility = nothingSaved ? Visibility.Collapsed : Visibility.Visible;
+        EmptyState.Visibility = nothingSaved ? Visibility.Visible : Visibility.Collapsed;
+        NoMatches.Visibility = !nothingSaved && _view.IsEmpty ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
         SearchHint.Visibility = string.IsNullOrEmpty(SearchBox.Text) ? Visibility.Visible : Visibility.Collapsed;
         _view.Refresh();
+        RefreshEmptyState();
     }
 
     private void RefreshRecents()
