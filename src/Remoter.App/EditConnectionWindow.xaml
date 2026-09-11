@@ -275,8 +275,8 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Content="Cancel" Width="96" Style="{StaticResource SecondaryButton}"
                         Click="Cancel_Click" Margin="0,0,8,0" IsCancel="True" />
-                <Button Content="Save" Width="110" Style="{StaticResource AccentButton}"
-                        Click="Save_Click" IsDefault="True" />
+                <Button x:Name="SaveButton" Content="Save" Width="110" Style="{StaticResource AccentButton}"
+                        Click="Save_Click" IsDefault="True" ToolTipService.ShowOnDisabled="True" />
             </StackPanel>
         </Border>
     </Grid>

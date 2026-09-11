@@ -15,7 +15,18 @@ public partial class EditConnectionWindow : Window
         _profile = profile;
         LoadFrom(profile, existingPassword);
         SizeModeBox.SelectionChanged += (_, _) => UpdateSizePanel();
+        NameBox.TextChanged += (_, _) => UpdateSaveEnabled();
+        HostBox.TextChanged += (_, _) => UpdateSaveEnabled();
+        UpdateSaveEnabled();
         ShowSection(0);
+    }
+
+    /// <summary>Save stays off until the two fields a connection cannot do without are filled in.</summary>
+    private void UpdateSaveEnabled()
+    {
+        var ready = !string.IsNullOrWhiteSpace(NameBox.Text) && !string.IsNullOrWhiteSpace(HostBox.Text);
+        SaveButton.IsEnabled = ready;
+        SaveButton.ToolTip = ready ? null : "Enter a name and a computer to save.";
     }
 
     /// <summary>
@@ -55,7 +66,9 @@ public partial class EditConnectionWindow : Window
 
     private void LoadFrom(ConnectionProfile p, string? existingPassword)
     {
-        NameBox.Text = p.Name;
+        // A saved connection with no name showed its computer in the list. Now that Save needs a
+        // name, start from that same text so editing an old connection is not blocked on it.
+        NameBox.Text = string.IsNullOrWhiteSpace(p.Name) ? p.Host : p.Name;
         HostBox.Text = p.Host;
         PortBox.Text = p.Port.ToString(CultureInfo.InvariantCulture);
         UserBox.Text = p.QualifiedUsername;
