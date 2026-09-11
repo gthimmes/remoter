@@ -54,7 +54,12 @@ public partial class SessionHostWindow : Window
         };
         var tab = new SessionTab(view);
 
-        view.StateChanged += (_, _) => { tab.RefreshStatus(); UpdateStatusBar(); };
+        view.StateChanged += (_, _) =>
+        {
+            tab.RefreshStatus();
+            UpdateStatusBar();
+            App.LiveSessions.Update(profile.Id, view, IsLive(view));
+        };
         view.LogChanged += (_, _) => UpdateStatusBar();
         view.CloseRequested += (_, _) => CloseTab(tab);
         view.FullScreenRequested += (_, fs) => { if (SelectedTab == tab) ApplyFullScreen(fs); };
@@ -75,6 +80,13 @@ public partial class SessionHostWindow : Window
     }
 
     private SessionTab? SelectedTab => Tabs.SelectedItem as SessionTab;
+
+    /// <summary>
+    /// Live means a desktop is up, or coming back after a drop. Connecting has not got there yet,
+    /// and a tab showing a failure is only a tab.
+    /// </summary>
+    private static bool IsLive(SessionView view) =>
+        !view.HasError && view.State is SessionState.Connected or SessionState.Reconnecting;
 
     private void Promote()
     {
@@ -124,6 +136,7 @@ public partial class SessionHostWindow : Window
         var index = _tabs.IndexOf(tab);
         _tabs.Remove(tab);
         SessionHost.Children.Remove(tab.View);
+        App.LiveSessions.Remove(tab.View);
         tab.View.Dispose();
 
         if (_tabs.Count == 0)
@@ -269,7 +282,10 @@ public partial class SessionHostWindow : Window
         }
 
         foreach (var tab in _tabs.ToList())
+        {
+            App.LiveSessions.Remove(tab.View);
             tab.View.Dispose();
+        }
         _tabs.Clear();
         SessionHost.Children.Clear();
     }

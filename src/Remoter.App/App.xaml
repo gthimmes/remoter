@@ -15,6 +15,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
             <conv:TagHueConverter x:Key="TagHue" />
+            <conv:LiveSessionConverter x:Key="LiveSession" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Remoter.App.Theming;
 using Remoter.Core.Security;
+using Remoter.Core.Sessions;
 using Remoter.Core.Storage;
 
 namespace Remoter.App;
@@ -12,6 +13,9 @@ public partial class App : Application
     public ConnectionManager Connections { get; private set; } = null!;
 
     public ThemeManager Theme { get; private set; } = null!;
+
+    /// <summary>Which saved connections have a live session, for the list's gutter dot.</summary>
+    public static LiveSessionTracker LiveSessions { get; } = new();
 
     public static new App Current => (App)Application.Current;
 
